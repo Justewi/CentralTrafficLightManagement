@@ -48,7 +48,7 @@ class ThreadClient implements Runnable
 				int taille = p.getDescription().getBytes().length;
 				// ecriture du texte passé en paramètre (et concaténation d'une string de fin de chaine si besoin)
 				_out.print(taille);
-				_out.print(p.getDescription()+'\u0000');
+				_out.print(p.getDescription());
 				_out.flush(); // envoi dans le flux de sortie
 			}
 		}
