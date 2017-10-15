@@ -4,7 +4,7 @@ public class Pattern {
 	private String description;
 
 	public Pattern() {
-		description = "default pattern\n";
+		description = "{ \"pattern\" : \"default\" }";
 	}
 
 	public Pattern(String description) {
