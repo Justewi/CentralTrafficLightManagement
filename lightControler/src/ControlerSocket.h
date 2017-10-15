@@ -17,6 +17,10 @@ public:
     char getChar(); /// Be aware that this might break the protocol, debug only ;)
     std::string read();
     std::string getRemoteAddress() const;
+
+    bool isConnected() {
+        return fdSocket != 0;
+    };
 };
 
 #endif /* CONTROLERSOCKET_H */

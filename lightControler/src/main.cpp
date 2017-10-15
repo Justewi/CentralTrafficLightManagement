@@ -28,7 +28,7 @@ int main(int argc, char** argv){
     ControlerSocket s(serverAddr, serverPort);
     std::cout << "Connected to " << serverAddr << ":" << serverPort << std::endl;
 
-    while (true){
+    while (s.isConnected()){
         std::string msg = s.read();
         if (msg == "stop"){
             std::cout << "Received stop command, switching everything off. Have fun with no trafic lights." << std::endl;
