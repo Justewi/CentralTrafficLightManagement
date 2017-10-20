@@ -5,7 +5,10 @@ OUT=controler
 
 # Libraries configuration
 CXXFLAGS+= -std=c++14 -g
-LDLIBS= -lws2_32
+
+ifeq ($(OS),Windows_NT)
+	LDLIBS+= -lws2_32
+endif
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 SOURCES=$(wildcard $(SRC_DIR)/*.cpp $(SRC_DIR)/**/*.cpp)
