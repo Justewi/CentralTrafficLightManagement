@@ -2,7 +2,14 @@
 #define CONTROLERSOCKET_H
 
 #include <string>
+#ifdef __linux__
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <netdb.h>
+#elif __WIN32__
 #include <ws2tcpip.h>
+#endif
 
 #include "StupidException.h"
 
