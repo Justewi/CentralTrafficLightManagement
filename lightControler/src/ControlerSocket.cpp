@@ -1,8 +1,13 @@
 #include "ControlerSocket.h"
 
-ControlerSocket::ControlerSocket(std::string serverAddr, unsigned int port){
+#include <unistd.h>
+#include <cstring>
+
+ControlerSocket::ControlerSocket(std::string serverAddr, unsigned int port) {
+#ifdef __WIN32__
     WSADATA WSAData;
     WSAStartup(MAKEWORD(2, 0), &WSAData);
+#endif
 
     // Perform DNS lookup
     hostent *h = gethostbyname(serverAddr.c_str());
@@ -21,15 +26,19 @@ ControlerSocket::ControlerSocket(std::string serverAddr, unsigned int port){
         throw StupidException("Connection failed (<" + serverAddr + ">" + inet_ntoa(remoteAddress.sin_addr) + ":" + std::to_string(port) + ")", errno);
 }
 
-ControlerSocket::ControlerSocket(const ControlerSocket& orig){
+ControlerSocket::ControlerSocket(const ControlerSocket& orig) {
 }
 
-ControlerSocket::~ControlerSocket(){
+ControlerSocket::~ControlerSocket() {
+#ifdef __linux__
+    close(fdSocket);
+#elif __WIN32__
     closesocket(fdSocket);
     WSACleanup();
+#endif
 }
 
-void ControlerSocket::send(std::string msg){
+void ControlerSocket::send(std::string msg) {
     if (fdSocket <= 0) throw StupidException("No client connected.", fdSocket);
     unsigned int tmp = htonl(msg.length());
     ::send(fdSocket, (char*) &tmp, sizeof (int), 0);
@@ -39,17 +48,17 @@ void ControlerSocket::send(std::string msg){
 /**
  * Get the client address
  */
-std::string ControlerSocket::getRemoteAddress() const{
+std::string ControlerSocket::getRemoteAddress() const {
     if (fdSocket <= 0) throw StupidException("No client connected.", fdSocket);
     return std::string(inet_ntoa(remoteAddress.sin_addr));
 }
 
-std::string ControlerSocket::read(){
+std::string ControlerSocket::read() {
     if (fdSocket <= 0) throw StupidException("No client connected.", fdSocket);
     // Lire la taille du message envoyé
     unsigned int taille;
     int nbRead = ::recv(fdSocket, (char*) &taille, 4, 0);
-    if (nbRead <= 0){
+    if (nbRead <= 0) {
         fdSocket = 0; // TODO: Fix this, we should close the socket (probably?)
         return std::string("");
     }
@@ -61,7 +70,7 @@ std::string ControlerSocket::read(){
     nbRead = ::recv(fdSocket, buf, taille, 0);
 
     // Si une erreur est arrivée
-    if (nbRead <= 0){
+    if (nbRead <= 0) {
         delete buf;
         fdSocket = 0;
         return std::string("");
@@ -73,11 +82,11 @@ std::string ControlerSocket::read(){
     return msg;
 }
 
-char ControlerSocket::getChar(){
+char ControlerSocket::getChar() {
     if (fdSocket <= 0) throw StupidException("No client connected.", fdSocket);
     char c;
     int nbRead = ::recv(fdSocket, &c, sizeof (char), 0);
-    if (nbRead <= 0){
+    if (nbRead <= 0) {
         fdSocket = 0; // TODO: Fix this, we should close the socket (probably?)
         return 0;
     }

@@ -4,6 +4,8 @@ import gestionpattern.Pattern;
 import java.io.*;
 import java.net.*;
 import java.nio.ByteBuffer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 //** Classe associée à chaque client (contrôleurs) **
 //** Il y aura autant d'instances de cette classe que de clients connectés **
@@ -31,20 +33,38 @@ class ThreadClient implements Runnable {
         _t.start(); // demarrage du thread, la fonction run() est ici lancée
     }
 
+    public String readMessage() {
+        try {
+            final DataInputStream inputStream = new DataInputStream(_s.getInputStream());
+            int msgSize = inputStream.readInt();
+            char[] msg = new char[msgSize];
+            _in.read(msg);
+            return new String(msg);
+        } catch (IOException ex) {
+            Logger.getLogger(ThreadClient.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return "";
+    }
+
+    public void writeMessage(String msg) throws IOException {
+        int taille = msg.getBytes().length;
+        // ecriture du texte passé en paramètre (et concaténation d'une string de fin de chaine si besoin)
+        _s.getOutputStream().write(ByteBuffer.allocate(4).putInt(taille).array());
+        _out.print(msg);
+        _out.flush(); // envoi dans le flux de sortie
+    }
+
     public void run() {
-        System.out.println("Un nouveau controleur s'est connecte");
+        String identifier = readMessage();
+        System.out.println("Nouveau controleur connecté: " + identifier);
         try {
             if (_out != null) // sécurité, l'élément ne doit pas être vide
             {
                 System.out.println("Envoi du pattern");
                 Pattern p = new Pattern();
-                int taille = p.getDescription().getBytes().length;
-                // ecriture du texte passé en paramètre (et concaténation d'une string de fin de chaine si besoin)
-                _s.getOutputStream().write(ByteBuffer.allocate(4).putInt(taille).array());
-                _out.print(p.getDescription());
-                _out.flush(); // envoi dans le flux de sortie
+                writeMessage(p.getDescription());
             }
-        } catch (Exception e) {
+        } catch (IOException e) {
             System.out.println("Le controleur s'est deconnecte");
         } finally // finally se produira le plus souvent lors de la deconnexion du client
         {
