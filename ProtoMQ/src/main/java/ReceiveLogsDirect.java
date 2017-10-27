@@ -4,9 +4,10 @@ import java.io.IOException;
 
 public class ReceiveLogsDirect {
 
-    private static final String EXCHANGE_NAME = "direct_logs";
+    private static final String EXCHANGE_NAME = "ctlms_exchanger";
 
     public static void main(String[] argv) throws Exception {
+
         ConnectionFactory factory = new ConnectionFactory();
         factory.setHost("localhost");
         Connection connection = factory.newConnection();
@@ -20,8 +21,8 @@ public class ReceiveLogsDirect {
             System.exit(1);
         }
 
-        for(String severity : argv){
-            channel.queueBind(queueName, EXCHANGE_NAME, severity);
+        for(String flag : argv){
+            channel.queueBind(queueName, EXCHANGE_NAME, flag);
         }
         System.out.println(" [*] Waiting for messages. To exit press CTRL+C");
 
