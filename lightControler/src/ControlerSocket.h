@@ -11,8 +11,6 @@
 #include <ws2tcpip.h>
 #endif
 
-#include "StupidException.h"
-
 class ControlerSocket {
     int fdSocket;
     struct sockaddr_in remoteAddress;

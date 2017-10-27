@@ -3,6 +3,9 @@
 #include <unistd.h>
 #include <cstring>
 
+#include <exception>
+#include <stdexcept>
+
 ControlerSocket::ControlerSocket(std::string serverAddr, unsigned int port) {
 #ifdef __WIN32__
     WSADATA WSAData;
@@ -12,10 +15,10 @@ ControlerSocket::ControlerSocket(std::string serverAddr, unsigned int port) {
     // Perform DNS lookup
     hostent *h = gethostbyname(serverAddr.c_str());
     if (h == NULL)
-        throw StupidException("Name resolving failed for (" + serverAddr + ":" + std::to_string(port) + ")", errno);
+        throw std::runtime_error("Name resolving failed for (" + serverAddr + ":" + std::to_string(port) + "). Errno: " + std::to_string(errno));
 
     if ((fdSocket = socket(AF_INET, SOCK_STREAM, 0)) < 0)
-        throw StupidException("Unable to create the socket");
+        throw std::runtime_error("Unable to create the socket");
     // Configure the socket
     remoteAddress.sin_family = AF_INET; // IPv4
     memcpy(&remoteAddress.sin_addr, h->h_addr_list[0], h->h_length);
@@ -23,7 +26,7 @@ ControlerSocket::ControlerSocket(std::string serverAddr, unsigned int port) {
 
     // Connect to the given serverAddr
     if (connect(fdSocket, (struct sockaddr*) &remoteAddress, sizeof (remoteAddress)) < 0)
-        throw StupidException("Connection failed (<" + serverAddr + ">" + inet_ntoa(remoteAddress.sin_addr) + ":" + std::to_string(port) + ")", errno);
+        throw std::runtime_error("Connection failed to " + serverAddr + " (" + inet_ntoa(remoteAddress.sin_addr) + "):" + std::to_string(port) + ". Errno: " + std::to_string(errno));
 }
 
 ControlerSocket::ControlerSocket(const ControlerSocket& orig) {
@@ -39,7 +42,7 @@ ControlerSocket::~ControlerSocket() {
 }
 
 void ControlerSocket::send(std::string msg) {
-    if (fdSocket <= 0) throw StupidException("No client connected.", fdSocket);
+    if (fdSocket <= 0) throw std::runtime_error("Send failed: no connexion.");
     unsigned int tmp = htonl(msg.length());
     ::send(fdSocket, (char*) &tmp, sizeof (int), 0);
     ::send(fdSocket, msg.c_str(), msg.length(), 0);
@@ -49,12 +52,12 @@ void ControlerSocket::send(std::string msg) {
  * Get the client address
  */
 std::string ControlerSocket::getRemoteAddress() const {
-    if (fdSocket <= 0) throw StupidException("No client connected.", fdSocket);
+    if (fdSocket <= 0) throw std::runtime_error("Can't get remote address: no connexion.");
     return std::string(inet_ntoa(remoteAddress.sin_addr));
 }
 
 std::string ControlerSocket::read() {
-    if (fdSocket <= 0) throw StupidException("No client connected.", fdSocket);
+    if (fdSocket <= 0) throw std::runtime_error("Read failed: no connexion.");
     // Lire la taille du message envoyé
     unsigned int taille;
     int nbRead = ::recv(fdSocket, (char*) &taille, 4, 0);
@@ -83,7 +86,7 @@ std::string ControlerSocket::read() {
 }
 
 char ControlerSocket::getChar() {
-    if (fdSocket <= 0) throw StupidException("No client connected.", fdSocket);
+    if (fdSocket <= 0) throw std::runtime_error("Read failed: no connexion.");
     char c;
     int nbRead = ::recv(fdSocket, &c, sizeof (char), 0);
     if (nbRead <= 0) {
