@@ -3,204 +3,27 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>fr.unice.polytech.isa</groupId>
-    <artifactId>tcf-backend</artifactId>
-    <packaging>war</packaging>
+    <groupId>fr.unice.polytech.al</groupId>
+    <artifactId>smartcity-ctlms</artifactId>
+    <packaging>jar</packaging>
     <version>1.0-SNAPSHOT</version>
-    <name>ISA :: The Cookie Factory :: J2E Backend</name>
-
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <versions.tomee.embedded>1.7.3</versions.tomee.embedded>
-        <versions.openjpa>2.4.1</versions.openjpa>
-        <versions.myface>2.2.10</versions.myface>
-    </properties>
-
-    <profiles>
-        <profile>
-            <!-- Use 'mvn -P stable' to activate stable dependencies (by default) -->
-            <id>stable</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <properties>
-                <versions.javaee>6.0-6</versions.javaee>
-                <versions.openejb>4.7.4</versions.openejb>
-                <versions.tomee>1.7.3</versions.tomee>
-            </properties>
-        </profile>
-        <profile>
-            <!-- Use 'mvn -P experimental' to activate these dependencies -->
-            <id>experimental</id>
-            <properties>
-                <versions.javaee>7.0-SNAPSHOT</versions.javaee>
-                <versions.openejb>5.0.0-SNAPSHOT</versions.openejb>
-                <versions.tomee>2.0.0-SNAPSHOT</versions.tomee>
-            </properties>
-        </profile>
-    </profiles>
-
-    <repositories>
-        <!-- Snapshot repository to access to the latest version of the OpenEJB framework -->
-        <repository>
-            <id>apache-m2-snapshot</id>
-            <name>Apache Snapshot Repository</name>
-            <url>https://repository.apache.org/content/groups/snapshots</url>
-        </repository>
-    </repositories>
-
-    <dependencies>
-        <dependency>
-            <groupId>org.json</groupId>
-            <artifactId>json</artifactId>
-            <version>20160810</version>
-        </dependency>
-        <!-- Dependencies for the OpenEJB framework (provided at runtime by the app server) -->
-        <dependency>
-            <groupId>org.apache.openejb</groupId>
-            <artifactId>javaee-api</artifactId>
-            <version>${versions.javaee}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.openejb</groupId>
-            <artifactId>openejb-core</artifactId>
-            <version>${versions.openejb}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.openejb</groupId>
-            <artifactId>tomee-embedded</artifactId>
-            <version>${versions.tomee}</version>
-            <scope>provided</scope>
-        </dependency>
-        <!-- Dependency to integrate REST clients (order matters for CXF) (provided) -->
-        <dependency>
-            <groupId>org.apache.openejb</groupId>
-            <artifactId>openejb-cxf</artifactId>
-            <version>${versions.openejb}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.openejb</groupId>
-            <artifactId>openejb-cxf-rs</artifactId>
-            <version>${versions.openejb}</version>
-            <scope>provided</scope>
-        </dependency>
-        <!-- Dependencies for the JSF framework (provided)-->
-        <dependency>
-            <groupId>org.apache.myfaces.core</groupId>
-            <artifactId>myfaces-api</artifactId>
-            <version>${versions.myface}</version>
-            <scope>provided</scope>
-        </dependency>
-        <!-- Dependencies for the testing frameworks (Junit, Mockito & Arquillian) (tests only) -->
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.12</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <version>1.10.19</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.jboss.arquillian.junit</groupId>
-            <artifactId>arquillian-junit-container</artifactId>
-            <version>1.1.5.Final</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.jboss.shrinkwrap.resolver</groupId>
-            <artifactId>shrinkwrap-resolver-depchain</artifactId>
-            <version>2.1.1</version>
-            <type>pom</type>
-            <scope>test</scope>
-        </dependency>
-        <!-- Application server: Tomee (tests only) -->
-        <dependency>
-            <groupId>org.apache.openejb</groupId>
-            <artifactId>arquillian-tomee-embedded</artifactId>
-            <version>${versions.tomee.embedded}</version>
-            <scope>test</scope>
-        </dependency>
-
-    </dependencies>
+    <name>AL :: CTLMS</name>
 
     <build>
-        <finalName>tcf-backend</finalName>
-        <defaultGoal>package</defaultGoal>
         <plugins>
             <plugin>
-                <groupId>org.apache.openjpa</groupId>
-                <artifactId>openjpa-maven-plugin</artifactId>
-                <version>${versions.openjpa}</version>
-                <configuration>
-                    <includes>**/entities/*.class</includes>
-                    <addDefaultConstructor>true</addDefaultConstructor>
-                    <enforcePropertyRestrictions>true</enforcePropertyRestrictions>
-                </configuration>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.6.0</version>
                 <executions>
                     <execution>
-                        <id>enhancer</id>
-                        <phase>process-classes</phase>
                         <goals>
-                            <goal>enhance</goal>
+                            <goal>java</goal>
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.17</version>
                 <configuration>
-                    <forkMode>always</forkMode>
-                    <!-- otherwise openejb embedded and tomee embedded shares the same context and EJBContainer is broken -->
-                    <reuseForks>false</reuseForks>
-                    <excludes>
-                        <exclude>**/*IntegrationTest.java</exclude>
-                    </excludes>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>integration-test</id>
-                        <goals>
-                            <goal>test</goal>
-                        </goals>
-                        <phase>integration-test</phase>
-                        <configuration>
-                            <excludes>
-                                <exclude>none</exclude>
-                            </excludes>
-                            <includes>
-                                <include>**/*IntegrationTest.java</include>
-                            </includes>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.1</version>
-                <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.openejb.maven</groupId>
-                <artifactId>tomee-maven-plugin</artifactId>
-                <version>${versions.tomee.embedded}</version>
-                <configuration>
-                    <!-- From TomEE to TomEE+ to support the web services stack -->
-                    <tomeeClassifier>plus</tomeeClassifier>
-                    <args>-Xmx512m -XX:PermSize=256m</args>
-                    <deployOpenEjbApplication>true</deployOpenEjbApplication>
+                    <mainClass>annuaire.ServeurTCP</mainClass>
                 </configuration>
             </plugin>
         </plugins>
