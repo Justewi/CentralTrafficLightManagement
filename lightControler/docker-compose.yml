@@ -1,0 +1,10 @@
+version: '3'
+
+services:
+  light-controller:
+    container_name: light-ctrlR
+    build: .
+    environment:
+      - ID=truc
+      - CS=127.0.0.1
+      - CS_PORT=9278
