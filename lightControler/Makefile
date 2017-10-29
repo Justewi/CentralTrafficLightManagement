@@ -5,6 +5,7 @@ OUT=controler
 
 # Libraries configuration
 CXXFLAGS+= -std=c++14 -g
+LDLIBS= -lamqpcpp -lpthread
 
 ifeq ($(OS),Windows_NT)
 	LDLIBS+= -lws2_32
