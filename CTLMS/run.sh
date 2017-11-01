@@ -3,5 +3,7 @@
 echo "Launching rabbitmq docker image ..."
 docker run -d -p 5672:5672 rabbitmq:3.6
 
+sleep 2
+
 echo "Starting java server ..."
-mvn exec:java
+mvn exec:java -Dexec.args="$*"

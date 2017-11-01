@@ -1,13 +1,16 @@
 FROM dockcross/base as builder
 
-RUN mkdir /src
-COPY . /src
-WORKDIR /src
-RUN bash build.sh
+#RUN mkdir /work
+COPY . /work
+WORKDIR /work
+RUN ["/bin/bash", "-e", "./buildInContainer.sh"]
 
 FROM debian
 
+
 #Add builded executable
-COPY --from=builder /src/lightCtrlR .
-CMD ls -lah
-CMD ./lightCtrlR $ID $CS $CS_PORT
+COPY --from=builder /work/controler .
+COPY --from=builder /work/startControlers.sh .
+WORKDIR /build
+ENTRYPOINT ["ls", "-la"]
+#CMD ["2", "localhost", "5672"]

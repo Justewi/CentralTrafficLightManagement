@@ -1,12 +1,14 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-mkdir build
-cd build
+# Lancer "./build.sh" pour se connecter au serveur RabbitMQ en localhost
+# Pour changer l'ip emplacement du serveur : "./build.sh <IP>"
 
-cmake ..
-make
+git clone https://github.com/CopernicaMarketingSoftware/AMQP-CPP.git
 
-cp lightCtrlR ..
-cd ..
+dos2unix buildInContainer.sh
+dos2unix startControlers.sh
 
-rm -rf build
+#mkdir nlohmann_json
+#curl https://github.com/nlohmann/json/releases/download/v2.1.1/json.hpp > nlohmann_json/json.hpp
+
+docker build -t ctlms/light-controler .

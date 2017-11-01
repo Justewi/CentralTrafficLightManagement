@@ -23,7 +23,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <mainClass>annuaire.ServeurTCP</mainClass>
+                    <mainClass>annuaire.QueueHandler</mainClass>
                 </configuration>
             </plugin>
         </plugins>
