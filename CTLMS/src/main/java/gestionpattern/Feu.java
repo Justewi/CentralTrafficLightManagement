@@ -25,5 +25,7 @@ public abstract class Feu {
 	public void setTimeGreen(int timeGreen) {
 		this.timeGreen = timeGreen;
 	}
+
+	public abstract String getDescription();
 	
 }

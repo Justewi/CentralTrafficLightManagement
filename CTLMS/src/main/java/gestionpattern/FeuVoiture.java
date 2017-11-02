@@ -30,6 +30,10 @@ public class FeuVoiture extends Feu {
 	public void setTimeOrange(int timeOrange) {
 		this.timeOrange = timeOrange;
 	}
-	
+
+	@Override
+	public String getDescription() {
+		return "{ \"timeGreen\" : "+timeGreen+ ", \"timeRed\" : "+timeRed+", \"timeOrange\" : "+timeOrange+" }";
+	}
 
 }

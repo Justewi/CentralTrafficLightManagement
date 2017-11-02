@@ -7,6 +7,7 @@ MessageQueue::MessageQueue(std::string identifier, std::string serverAddr, unsig
 channel(&mqConnection) {
     channel.declareQueue(identifier);
     channel.bindQueue("ctlms_exchanger", identifier, "ALL");
+    channel.bindQueue("ctlms_exchanger", identifier, identifier);
     channel.consume(identifier).onSuccess([]() {
         std::cout << "Starting to consume messages." << std::endl;
     }).onMessage(onMessage).onError([](const char *message) {

@@ -43,6 +43,9 @@ public class QueueHandler {
         //Ici à terme on aura théoriquement une boucle qui attends qu'on lui dise d'envoyer des messages.
         //et qui les enverra comme ci dessous:
 
+        System.out.println("Envoi des patterns aux controleurs connus");
+        ControlerList.sendInitPattern(qh);
+
         Scanner scanner = new Scanner(System.in);
         while(true){
             System.out.println("Veuillez entrer le flag sur lequel envoyer : (quit pour quitter)");

@@ -9,4 +9,8 @@ public class FeuPieton extends Feu{
 		super(DEFAULT_GREEN_DURATION, DEFAULT_RED_DURATION);
 	}
 
+	@Override
+	public String getDescription() {
+		return "{ \"timeGreen\" : "+timeGreen+ ", \"timeRed\" : "+timeRed+" }";
+	}
 }
