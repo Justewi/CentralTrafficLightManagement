@@ -5,6 +5,8 @@ import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.Channel;
 import gestionpattern.Pattern;
 
+import java.util.Scanner;
+
 /**
  * Classe d'abstraction faisant l'interface avec RabbitMQ
  */
@@ -29,12 +31,30 @@ public class QueueHandler {
 
         //Ici à terme on aura théoriquement une boucle qui attends qu'on lui dise d'envoyer des messages.
         //et qui les enverra comme ci dessous:
-        qh.sendMessage(getFlags(argv), getMessage(argv));
+
+        Scanner scanner = new Scanner(System.in);
+        while(true){
+            System.out.println("Veuillez entrer le flag sur lequel envoyer : (quit pour quitter)");
+            String flags = scanner.nextLine();
+
+            if(flags.contains("quit")){
+                qh.channel.close();
+                connection.close();
+                return;
+            }
+
+            System.out.println("Veuillez entrer le message à envoyer : ");
+            String message = scanner.nextLine();
+            System.out.println(message);
+            System.out.println(message.split(" ")[0]);
+
+            qh.sendMessage(getFlags(flags.split(" ")), getMessage(message.split(" ")));
+        }
+
 
 
         //Fermeture du channel et de la connexion.
-        qh.channel.close();
-        connection.close();
+
     }
 
     /**
@@ -47,7 +67,7 @@ public class QueueHandler {
     public void sendMessage(String flag , String message) throws Exception {
         //Envoie un message à un certain exchanger, avec un certain flag.
         this.channel.basicPublish(EXCHANGE_NAME, flag, null, message.getBytes("UTF-8"));
-        System.out.println(" [x] Sent '" + flag + "':'" + message + "'");
+        System.out.println(" [x] Sent '" + flag + "' : '" + message + "'");
     }
 
     private static String getFlags(String[] strings){
