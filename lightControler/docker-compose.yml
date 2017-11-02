@@ -6,5 +6,19 @@ services:
     build: .
     environment:
       - ID=truc
-      - CS=mq-node
-      - CS_PORT=9278
+      - CS=activemq-node
+      - CS_PORT=5672
+    depends_on:
+      - activemq
+
+  activemq:
+    container_name: activemq-node
+    image: rabbitmq:3.6
+    ports:
+      - 15672:15672
+      - 5672:5672
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:15672"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
