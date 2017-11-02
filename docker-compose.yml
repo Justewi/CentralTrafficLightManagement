@@ -5,7 +5,7 @@ services:
     container_name: controller
     image: gr2/controller
     environment:
-      - ID=truc
+      - ID=ctrl1
       - CS=activemq
       - CS_PORT=5672
     depends_on:

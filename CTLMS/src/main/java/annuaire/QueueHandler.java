@@ -45,8 +45,9 @@ public class QueueHandler {
 
         System.out.println("Envoi des patterns aux controleurs connus");
         ControlerList.sendInitPattern(qh);
+        System.out.println("Patterns initiaux envoyes");
 
-        Scanner scanner = new Scanner(System.in);
+        /*Scanner scanner = new Scanner(System.in);
         while(true){
             System.out.println("Veuillez entrer le flag sur lequel envoyer : (quit pour quitter)");
             String flags = scanner.nextLine();
@@ -63,12 +64,14 @@ public class QueueHandler {
             System.out.println(message.split(" ")[0]);
 
             qh.sendMessage(getFlags(flags.split(" ")), getMessage(message.split(" ")));
-        }
+        }*/
 
 
 
         //Fermeture du channel et de la connexion.
 
+        qh.channel.close();
+        connection.close();
     }
 
     /**

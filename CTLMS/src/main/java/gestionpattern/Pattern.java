@@ -7,6 +7,7 @@ public class Pattern {
 	private ArrayList<Feu> feux;
 
 	public Pattern() {
+		feux = new ArrayList<Feu>();
 	}
 
 	public String getDescription() {
