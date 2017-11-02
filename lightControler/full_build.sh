@@ -4,4 +4,4 @@ cd docker_builder
 ./build.sh
 cd ..
 
-docker build -t gr7/controller
+./app_build.sh
