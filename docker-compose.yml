@@ -1,18 +1,26 @@
 version: '3'
 
 services:
-  light-controller:
-    container_name: light-ctrlR
-    build: .
+  controller:
+    container_name: controller
+    image: gr2/controller
     environment:
       - ID=truc
-      - CS=activemq-node
+      - CS=activemq
       - CS_PORT=5672
     depends_on:
       - activemq
 
+  ctlms:
+    container_name: ctlms
+    image: gr2/ctlms
+    environment:
+      - RABBIT_HOST=activemq
+    depends_on:
+      - activemq
+
   activemq:
-    container_name: activemq-node
+    container_name: activemq
     image: rabbitmq:3.6
     ports:
       - 15672:15672

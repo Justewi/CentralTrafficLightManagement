@@ -9,6 +9,6 @@ FROM debian
 
 #Fetch executable
 COPY --from=builder /usr/lib/libamqpcpp.* /usr/lib/
-COPY --from=builder /src/lightCtrlR .
+COPY --from=builder /src/build/lightCtrlR .
 
 CMD ./lightCtrlR $ID $CS $CS_PORT

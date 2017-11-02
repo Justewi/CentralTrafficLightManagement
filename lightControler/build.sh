@@ -1,3 +1,6 @@
 #!/bin/bash
 
-docker build -t gr7/controller
+mkdir build
+cd build
+cmake ..
+make
