@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <sys/ioctl.h>
 #include <amqpcpp.h>
+#include <iostream>
 
 class MessageQueue {
 

@@ -6,5 +6,5 @@ services:
     build: .
     environment:
       - ID=truc
-      - CS=127.0.0.1
+      - CS=mq-node
       - CS_PORT=9278

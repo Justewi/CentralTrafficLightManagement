@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-# Lancer "./build.sh" pour se connecter au serveur RabbitMQ en localhost
-# Pour changer l'ip emplacement du serveur : "./build.sh <IP>"
-
-git clone https://github.com/CopernicaMarketingSoftware/AMQP-CPP.git
+mkdir build
+cd build
+cmake ..
+make
 
 dos2unix buildInContainer.sh
 dos2unix startControlers.sh
