@@ -1,10 +1,9 @@
 package annuaire;
 
-import com.rabbitmq.client.ConnectionFactory;
-import com.rabbitmq.client.Connection;
-import com.rabbitmq.client.Channel;
+import com.rabbitmq.client.*;
 import gestionpattern.Pattern;
 
+import java.io.IOException;
 import java.util.Scanner;
 
 /**
@@ -19,6 +18,9 @@ public class QueueHandler {
     private static String DEFAULTFLAG = "ALL";
     private static String DEFAULT_RABBITMQ_IP = "localhost";
     private static int DEFAULT_RABBITMQ_PORT = 5672;
+
+
+    private final static String QUEUE_NAME = "serverqueue";
 
     public static void main(String[] argv) throws Exception {
 
@@ -66,12 +68,29 @@ public class QueueHandler {
             qh.sendMessage(getFlags(flags.split(" ")), getMessage(message.split(" ")));
         }*/
 
+        qh.channel.queueDeclare(QUEUE_NAME, false, false, false, null);
+        qh.channel.queueBind(QUEUE_NAME, EXCHANGE_NAME, "pedestrian");
+        System.out.println(" [*] Attente de message. CTRL+C pour quitter");
+
+        Consumer consumer = new DefaultConsumer(qh.channel) {
+            @Override
+            public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body)
+                    throws IOException {
+                String message = new String(body, "UTF-8");
+                System.out.println(" [x] Received '" + message + "'");
+            }
+        };
+
+        //while(true){
+            qh.channel.basicConsume(QUEUE_NAME, true, consumer);
+            ControlerList.sendModifiedPattern(qh);
+        //}
 
 
         //Fermeture du channel et de la connexion.
 
-        qh.channel.close();
-        connection.close();
+        /*qh.channel.close();
+        connection.close();*/
     }
 
     /**

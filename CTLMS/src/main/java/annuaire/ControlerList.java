@@ -32,6 +32,14 @@ public class ControlerList{
     }
 
     public static void sendInitPattern(QueueHandler qh){
+        try {
+            qh.sendMessage("ALL", new Pattern().getDescription());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void sendModifiedPattern(QueueHandler qh){
         for(Controler c : controlers){
             try {
                 qh.sendMessage(c.getFlagId(), c.getPattern().getDescription());
