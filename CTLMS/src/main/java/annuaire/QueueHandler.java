@@ -30,7 +30,7 @@ public class QueueHandler {
         }
         System.out.println("Connexion a RabbitMQ a l'adresse "+host+":"+DEFAULT_RABBITMQ_PORT+" ...");
 
-        QueueHandler qh = new QueueHandler();
+        final QueueHandler qh = new QueueHandler();
         ConnectionFactory factory = new ConnectionFactory();
         factory.setHost(host);
 
@@ -45,31 +45,13 @@ public class QueueHandler {
         //Ici à terme on aura théoriquement une boucle qui attends qu'on lui dise d'envoyer des messages.
         //et qui les enverra comme ci dessous:
 
+        qh.channel.queueDeclare(QUEUE_NAME, false, false, false, null);
+        qh.channel.queueBind(QUEUE_NAME, EXCHANGE_NAME, "PEDESTRIAN");
+
         System.out.println("Envoi des patterns aux controleurs connus");
         ControlerList.sendInitPattern(qh);
         System.out.println("Patterns initiaux envoyes");
 
-        /*Scanner scanner = new Scanner(System.in);
-        while(true){
-            System.out.println("Veuillez entrer le flag sur lequel envoyer : (quit pour quitter)");
-            String flags = scanner.nextLine();
-
-            if(flags.contains("quit")){
-                qh.channel.close();
-                connection.close();
-                return;
-            }
-
-            System.out.println("Veuillez entrer le message à envoyer : ");
-            String message = scanner.nextLine();
-            System.out.println(message);
-            System.out.println(message.split(" ")[0]);
-
-            qh.sendMessage(getFlags(flags.split(" ")), getMessage(message.split(" ")));
-        }*/
-
-        qh.channel.queueDeclare(QUEUE_NAME, false, false, false, null);
-        qh.channel.queueBind(QUEUE_NAME, EXCHANGE_NAME, "pedestrian");
         System.out.println(" [*] Attente de message. CTRL+C pour quitter");
 
         Consumer consumer = new DefaultConsumer(qh.channel) {
@@ -78,14 +60,12 @@ public class QueueHandler {
                     throws IOException {
                 String message = new String(body, "UTF-8");
                 System.out.println(" [x] Received '" + message + "'");
+                ControlerList.sendModifiedPattern(qh);
+                System.out.println("");
             }
         };
 
-        //while(true){
-            qh.channel.basicConsume(QUEUE_NAME, true, consumer);
-            ControlerList.sendModifiedPattern(qh);
-        //}
-
+        qh.channel.basicConsume(QUEUE_NAME, true, consumer);
 
         //Fermeture du channel et de la connexion.
 

@@ -6,6 +6,7 @@ MessageQueue::MessageQueue(std::string identifier, std::string serverAddr, unsig
 : identifier(identifier), mqConnection(&mqHandler, "amqp://" + serverAddr + ":" + std::to_string(serverPort)),
 channel(&mqConnection) {
     channel.declareQueue(identifier);
+    channel.declareExchange("ctlms_exchanger", AMQP::ExchangeType::direct);
     channel.bindQueue("ctlms_exchanger", identifier, "ALL");
     channel.bindQueue("ctlms_exchanger", identifier, identifier);
     channel.consume(identifier).onSuccess([]() {
