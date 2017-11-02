@@ -23,7 +23,6 @@ void MessageQueue::update() {
         int count = 0;
         ioctl(fd, FIONREAD, &count);
         if (count > 0) {
-            std::cout << fd << " doable:" << count << std::endl;
             mqConnection.process(fd, AMQP::readable | AMQP::writable);
         }
     }
