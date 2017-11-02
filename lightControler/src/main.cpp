@@ -6,6 +6,7 @@
 #include <nlohmann/json.hpp>
 #include "ControlerSocket.h"
 #include "MessageQueue.h"
+#include "Logger.h"
 
 using namespace std;
 
@@ -30,17 +31,19 @@ int main(int argc, char** argv) {
     if (argc > 3) {
         serverPort = std::atoi(argv[3]);
     }
-    std::cout << "[" << identifier << "] Connecting to " << serverAddr << ":" << serverPort << std::endl;
+
+    Logger log(std::cout, "[" + identifier + "] ");
+
+    std::cout << "Connecting to " << serverAddr << ":" << serverPort << std::endl;
     bool isRunning = true;
     MessageQueue mq(identifier, serverAddr, serverPort, [&](const AMQP::Message& message, uint64_t deliveryTag, bool redelivered) {
         std::string msg(message.body(), message.bodySize());
         std::cout << "Message received " << msg << std::endl;
         if (msg == "stop") {
-            std::cout << "[" << identifier << "] Received stop command, switching everything off. Have fun with no trafic lights." << std::endl;
+            std::cout << "Received stop command, switching everything off. Have fun with no trafic lights." << std::endl;
                     isRunning = false;
         }
     });
-    std::cout << "[" << identifier << "] Connected to " << serverAddr << ":" << serverPort << std::endl;
 
     // Start a thread to wait for input (walker requesting passage)
     bool wasPassageRequested = false;
@@ -59,7 +62,7 @@ int main(int argc, char** argv) {
             wasPassageRequested = false;
         }
     }
-    std::cout << "[" << identifier << "] Bye!" << std::endl;
+    std::cout << "Bye!" << std::endl;
     return 0;
 }
 
