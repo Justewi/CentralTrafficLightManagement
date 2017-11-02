@@ -2,6 +2,7 @@
 
 cd AMQP-CPP
 
+make
 sudo make install
 
 cd ..
