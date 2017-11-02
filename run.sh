@@ -12,10 +12,10 @@ sleep 5
 
 docker-compose up ctlms
 
-echo -e "${ORANGE}\nWaiting for CTLMS to complete startup${NC}\n"
-sleep 5
+#echo -e "${ORANGE}\nWaiting for CTLMS to complete startup${NC}\n"
+#sleep 5
 
-docker-compose run controller
+#docker-compose run controller
 
 echo -e "${RED}\nShutting down the whole system${NC}\n"
 docker-compose down

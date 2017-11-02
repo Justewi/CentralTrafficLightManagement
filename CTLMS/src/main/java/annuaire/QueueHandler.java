@@ -4,7 +4,6 @@ import com.rabbitmq.client.*;
 import gestionpattern.Pattern;
 
 import java.io.IOException;
-import java.util.Scanner;
 
 /**
  * Classe d'abstraction faisant l'interface avec RabbitMQ
@@ -25,10 +24,10 @@ public class QueueHandler {
     public static void main(String[] argv) throws Exception {
 
         String host = DEFAULT_RABBITMQ_IP;
-        if(argv.length > 0) {
+        if (argv.length > 0) {
             host = argv[0];
         }
-        System.out.println("Connexion a RabbitMQ a l'adresse "+host+":"+DEFAULT_RABBITMQ_PORT+" ...");
+        System.out.println("Connexion a RabbitMQ a l'adresse " + host + ":" + DEFAULT_RABBITMQ_PORT + " ...");
 
         final QueueHandler qh = new QueueHandler();
         ConnectionFactory factory = new ConnectionFactory();
@@ -75,24 +74,25 @@ public class QueueHandler {
 
     /**
      * The method used to send messages to rabbitMQ
-     * @param flag the flag where messages will be sent (Used by rabbitMQ to route Messages)
+     *
+     * @param flag    the flag where messages will be sent (Used by rabbitMQ to route Messages)
      * @param message the message containing JSON
      * @throws Exception
      */
 
-    public void sendMessage(String flag , String message) throws Exception {
+    public void sendMessage(String flag, String message) throws Exception {
         //Envoie un message à un certain exchanger, avec un certain flag.
         this.channel.basicPublish(EXCHANGE_NAME, flag, null, message.getBytes("UTF-8"));
         System.out.println(" [x] Sent '" + flag + "' : '" + message + "'");
     }
 
-    private static String getFlags(String[] strings){
+    private static String getFlags(String[] strings) {
         if (strings.length < 1)
             return DEFAULTFLAG;
         return strings[0];
     }
 
-    private static String getMessage(String[] strings){
+    private static String getMessage(String[] strings) {
         Pattern pattern = new Pattern();
         if (strings.length < 2)
             return pattern.getDescription();
@@ -101,8 +101,8 @@ public class QueueHandler {
 
     private static String joinStrings(String[] strings, String delimiter, int startIndex) {
         int length = strings.length;
-        if (length == 0 ) return "";
-        if (length < startIndex ) return "";
+        if (length == 0) return "";
+        if (length < startIndex) return "";
         StringBuilder words = new StringBuilder(strings[startIndex]);
         for (int i = startIndex + 1; i < length; i++) {
             words.append(delimiter).append(strings[i]);
