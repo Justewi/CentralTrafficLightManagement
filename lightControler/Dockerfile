@@ -1,13 +1,14 @@
-FROM dockcross/base as builder
+FROM gr2/cppbuilder as builder
 
-RUN mkdir /src
-COPY . /src
-WORKDIR /src
+COPY . .
 RUN bash build.sh
+
+######################################################
 
 FROM debian
 
-#Add builded executable
-COPY --from=builder /src/lightCtrlR .
-CMD ls -lah
+#Fetch executable
+COPY --from=builder /usr/lib/libamqpcpp.* /usr/lib/
+COPY --from=builder /src/build/lightCtrlR .
+
 CMD ./lightCtrlR $ID $CS $CS_PORT

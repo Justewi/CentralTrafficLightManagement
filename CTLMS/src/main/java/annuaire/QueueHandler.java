@@ -17,17 +17,28 @@ public class QueueHandler {
     private Channel channel;
 
     private static String DEFAULTFLAG = "ALL";
+    private static String DEFAULT_RABBITMQ_IP = "localhost";
+    private static int DEFAULT_RABBITMQ_PORT = 5672;
 
     public static void main(String[] argv) throws Exception {
+
+        String host = DEFAULT_RABBITMQ_IP;
+        if(argv.length > 0) {
+            host = argv[0];
+        }
+        System.out.println("Connexion a RabbitMQ a l'adresse "+host+":"+DEFAULT_RABBITMQ_PORT+" ...");
+
         QueueHandler qh = new QueueHandler();
         ConnectionFactory factory = new ConnectionFactory();
-        factory.setHost("localhost");
+        factory.setHost(host);
+
         Connection connection = factory.newConnection();
         //On se connecte a rabbitMQ et on y crée un channel.
         qh.channel = connection.createChannel();
         //On déclare l'échangeur de type que l'on va utiliser pour nos messages(ctlms_exchanger).
         qh.channel.exchangeDeclare(EXCHANGE_NAME, "direct");
 
+        System.out.println("Serveur connecte");
 
         //Ici à terme on aura théoriquement une boucle qui attends qu'on lui dise d'envoyer des messages.
         //et qui les enverra comme ci dessous:

@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <sys/ioctl.h>
 #include <amqpcpp.h>
+#include <iostream>
 
 class MessageQueue {
 
@@ -23,18 +24,17 @@ class MessageQueue {
         }
 
         void monitor(AMQP::TcpConnection* connection, int fd, int flags) override {
-            std::cout << "monitor." << fd << std::endl;
             //TODO: Notify only once, don't monitor forever
             if (std::find(fdToMonitor.begin(), fdToMonitor.end(), fd) == fdToMonitor.end())
                 fdToMonitor.push_back(fd);
         }
 
         void onError(AMQP::TcpConnection* connection, const char* message) override {
-            std::cout << "ERROR" << message << std::endl;
+            std::cout << "Error with the connection to RabbitMQ: " << message << std::endl;
         }
 
         uint16_t onNegotiate(AMQP::TcpConnection* connection, uint16_t interval) override {
-            std::cout << "Negociate" << std::endl;
+            std::cout << "Negociating with RabbitMQ" << std::endl;
         }
     };
 
