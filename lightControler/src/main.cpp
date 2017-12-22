@@ -1,14 +1,22 @@
 #include <iostream>
 #include <string>
 #include <thread>
+#include <csignal>
 
 #include <unistd.h>
 #include <nlohmann/json.hpp>
+#include <csignal>
 #include "ControlerSocket.h"
 #include "MessageQueue.h"
 #include "Logger.h"
 
 using namespace std;
+
+bool wasPassageRequested = false;
+
+void handleWalkerSignal(int signal) {
+    wasPassageRequested = true;
+}
 
 /**
  * The controler for the crossroads' trafic lights.
@@ -45,14 +53,8 @@ int main(int argc, char** argv) {
         }
     });
 
-    // Start a thread to wait for input (walker requesting passage)
-    bool wasPassageRequested = false;
-    std::thread ioThread([&]() {
-        while (std::cin.get() != EOF) {
-            wasPassageRequested = true;
-        }
-    });
-
+    // Wait for a walker to push the button (Through SIGUSR1)
+    std::signal(SIGUSR1, handleWalkerSignal);
 
     while (isRunning) {
         mq.update();
