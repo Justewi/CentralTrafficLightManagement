@@ -49,6 +49,6 @@ public class Main {
         while (true);
 
         // Fermeture propre du bazar
-        qh.close();
+//        qh.close();
     }
 }
