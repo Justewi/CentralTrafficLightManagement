@@ -27,6 +27,10 @@ while true ; do
         "w" | "walker")
             kill -10 ${processes[0]}
             ;;
+        "p" | "ping")
+            # send SIGUSR2 to all processes
+            kill -12 ${processes[@]}
+            ;;
         "s" | "stop")
             break
             ;;

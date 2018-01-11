@@ -10,12 +10,19 @@
 #include "MessageQueue.h"
 #include "Logger.h"
 
+#include <chrono>
+
 using namespace std;
 
 bool wasPassageRequested = false;
+bool wasPingRequested = false;
 
 void handleWalkerSignal(int signal) {
     wasPassageRequested = true;
+}
+
+void handlePingSignal(int signal) {
+    wasPingRequested = true;
 }
 
 /**
@@ -44,17 +51,21 @@ int main(int argc, char** argv) {
 
     std::cout << "Connecting to " << serverAddr << ":" << serverPort << std::endl;
     bool isRunning = true;
+    std::chrono::steady_clock::time_point pingStart;
     MessageQueue mq(identifier, serverAddr, serverPort, [&](const AMQP::Message& message, uint64_t deliveryTag, bool redelivered) {
         std::string msg(message.body(), message.bodySize());
         std::cout << "Message received " << msg << std::endl;
         if (msg == "stop") {
             std::cout << "Received stop command, switching everything off. Have fun with no trafic lights." << std::endl;
                     isRunning = false;
+        } else if (msg == "pong") {
+            std::cout << "Ping response received in " << std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - pingStart).count() << "ms." << std::endl;
         }
     });
 
     // Wait for a walker to push the button (Through SIGUSR1)
     std::signal(SIGUSR1, handleWalkerSignal);
+    std::signal(SIGUSR2, handlePingSignal);
 
     while (isRunning) {
         mq.update();
@@ -62,6 +73,11 @@ int main(int argc, char** argv) {
         if (wasPassageRequested) {
             mq.notifyPedestrian("N");
             wasPassageRequested = false;
+        }
+        if (wasPingRequested) {
+            mq.notifyServer("PING", "{\"key\":\"qsd\",\"from\":\"" + identifier + "\"}");
+            pingStart = std::chrono::steady_clock::now();
+            wasPingRequested = false;
         }
     }
     std::cout << "Bye!" << std::endl;

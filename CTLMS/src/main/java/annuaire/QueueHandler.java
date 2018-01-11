@@ -3,6 +3,8 @@ package annuaire;
 import com.rabbitmq.client.*;
 import gestionpattern.Pattern;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Classe d'abstraction faisant l'interface avec RabbitMQ
@@ -11,6 +13,7 @@ public class QueueHandler {
 
     private static final String EXCHANGE_NAME = "ctlms_exchanger";
     private final static String QUEUE_NAME = "serverqueue";
+    private final static String QUEUE_NAME_PING = "pingqueue";
 
     private Connection connection;
     private Channel channel;
@@ -30,6 +33,20 @@ public class QueueHandler {
         // Créer les queues
         channel.queueDeclare(QUEUE_NAME, false, false, false, null);
         channel.queueBind(QUEUE_NAME, EXCHANGE_NAME, "PEDESTRIAN");
+        channel.queueDeclare(QUEUE_NAME_PING, false, false, false, null);
+        channel.queueBind(QUEUE_NAME_PING, EXCHANGE_NAME, "PING");
+
+        onMessage(new MessageListener() {
+            @Override
+            public void onMessage(String tag, byte[] body) {
+                try {
+                    //TODO: Respond only to the sender (body is json, with key 'from')
+                    sendMessage("ALL", "pong");
+                } catch (Exception ex) {
+                    Logger.getLogger(QueueHandler.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
     }
 
     /**

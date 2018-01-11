@@ -51,6 +51,11 @@ public:
         channel.publish("ctlms_exchanger", "PEDESTRIAN", "{\"direction\":\"" + direction + "\"}");
         std::cout << "Pedestrian notification sent" << std::endl;
     };
+
+    void notifyServer(std::string title, std::string content) {
+        channel.publish("ctlms_exchanger", title, content);
+        std::cout << "Message sent: [" << title << "] " << content << std::endl;
+    }
 };
 
 #endif /* MESSAGEQUEUE_H */
