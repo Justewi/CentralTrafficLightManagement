@@ -5,6 +5,7 @@ import gestionpattern.Pattern;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.json.JSONObject;
 
 /**
  * Classe d'abstraction faisant l'interface avec RabbitMQ
@@ -36,12 +37,14 @@ public class QueueHandler {
         channel.queueDeclare(QUEUE_NAME_PING, false, false, false, null);
         channel.queueBind(QUEUE_NAME_PING, EXCHANGE_NAME, "PING");
 
-        onMessage(new MessageListener() {
+        channel.basicConsume(QUEUE_NAME_PING, new DefaultConsumer(channel) {
             @Override
-            public void onMessage(String tag, byte[] body) {
+            public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) throws IOException {
                 try {
                     //TODO: Respond only to the sender (body is json, with key 'from')
-                    sendMessage("ALL", "pong");
+                    JSONObject msg = new JSONObject(new String(body, "UTF-8"));
+                    System.out.println(body);
+                    sendMessage(msg.getString("from"), "pong");
                 } catch (Exception ex) {
                     Logger.getLogger(QueueHandler.class.getName()).log(Level.SEVERE, null, ex);
                 }
