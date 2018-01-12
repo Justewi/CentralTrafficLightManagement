@@ -4,12 +4,14 @@
 # Start several controlers.
 #
 
+echo "Starting controlers script"
+
 serverAddr=""
 serverPort=""
 
 [[ $# -eq 0 ]] && echo "Missing parameter, usage: $0 numberOfCtrl [serverAddr] [serverPort]" && exit 1;
 [[ $# -gt 1 ]] && serverAddr=$2
-[[ $# -gt 2 ]] && serverAddr=$3
+[[ $# -gt 2 ]] && serverPort=$3
 
 declare -a processes
 

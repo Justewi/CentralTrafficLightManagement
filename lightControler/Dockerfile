@@ -9,6 +9,7 @@ FROM debian
 
 #Fetch executable
 COPY --from=builder /usr/lib/libamqpcpp.* /usr/lib/
-COPY --from=builder /src/build/lightCtrlR .
+COPY --from=builder /src/build/lightCtrlR ./controler
+COPY ./startControlers.sh .
 
-CMD ./lightCtrlR $ID $CS $CS_PORT
+CMD bash startControlers.sh $NB $CS $CS_PORT
