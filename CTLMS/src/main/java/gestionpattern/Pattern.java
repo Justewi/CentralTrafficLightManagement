@@ -1,17 +1,20 @@
 package gestionpattern;
 
+import javax.persistence.Entity;
 import java.util.ArrayList;
 
+@Entity
 public class Pattern {
 
     private ArrayList<Feu> feux;
+
 
     public Pattern() {
         feux = new ArrayList<Feu>();
     }
 
-    public String getDescription() {
-        String description = "{ \"pattern\" : ";
+    public java.lang.String getDescription() {
+        java.lang.String description = "{ \"pattern\" : ";
         if (feux.size() == 0) {
             description += "\"default\"";
         } else {

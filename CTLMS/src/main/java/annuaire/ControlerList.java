@@ -2,7 +2,6 @@ package annuaire;
 
 import gestionpattern.FeuPieton;
 import gestionpattern.FeuVoiture;
-import gestionpattern.Pattern;
 
 import java.util.ArrayList;
 
@@ -11,12 +10,12 @@ public class ControlerList {
 
 
     private static void initList() {
-        Pattern p = new Pattern();
-        p.addFeu(new FeuVoiture());
-        p.addFeu(new FeuPieton());
-        controlers.add(new Controler("ctrl1", p));
-        controlers.add(new Controler("ctrl2", p));
-        controlers.add(new Controler("ctrl3", p));
+        String p = new String();
+        ///p.addFeu(new FeuVoiture());
+        ///p.addFeu(new FeuPieton());
+        controlers.add(new Controler("ctrl1", "{ \"pattern\" : \"default\" }"));
+        controlers.add(new Controler("ctrl2", "{ \"pattern\" : \"default\" }"));
+        controlers.add(new Controler("ctrl3", "{ \"pattern\" : \"default\" }"));
     }
 
     public static ArrayList<Controler> getControlers() {
@@ -33,7 +32,7 @@ public class ControlerList {
 
     public static void sendInitPattern(QueueHandler qh) {
         try {
-            qh.sendMessage("ALL", new Pattern().getDescription());
+            qh.sendMessage("ALL","{ \"pattern\" : \"default\" }" );
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -42,7 +41,7 @@ public class ControlerList {
     public static void sendModifiedPattern(QueueHandler qh) {
         for (Controler c : controlers) {
             try {
-                qh.sendMessage(c.getFlagId(), c.getPattern().getDescription());
+                qh.sendMessage(c.getFlagId(), c.getPattern());
             } catch (Exception e) {
                 System.out.println("Couldn't send pattern at server init");
                 e.printStackTrace();

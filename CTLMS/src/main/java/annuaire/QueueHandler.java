@@ -1,7 +1,6 @@
 package annuaire;
 
 import com.rabbitmq.client.*;
-import gestionpattern.Pattern;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -12,16 +11,16 @@ import org.json.JSONObject;
  */
 public class QueueHandler {
 
-    private static final String EXCHANGE_NAME = "ctlms_exchanger";
-    private final static String QUEUE_NAME = "serverqueue";
-    private final static String QUEUE_NAME_PING = "pingqueue";
+    private static final java.lang.String EXCHANGE_NAME = "ctlms_exchanger";
+    private final static java.lang.String QUEUE_NAME = "serverqueue";
+    private final static java.lang.String QUEUE_NAME_PING = "pingqueue";
 
     private Connection connection;
     private Channel channel;
 
-    private static String DEFAULTFLAG = "ALL";
+    private static java.lang.String DEFAULTFLAG = "ALL";
 
-    public QueueHandler(String host) throws IOException {
+    public QueueHandler(java.lang.String host) throws IOException {
         ConnectionFactory factory = new ConnectionFactory();
         factory.setHost(host);
 
@@ -39,10 +38,10 @@ public class QueueHandler {
 
         channel.basicConsume(QUEUE_NAME_PING, new DefaultConsumer(channel) {
             @Override
-            public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) throws IOException {
+            public void handleDelivery(java.lang.String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) throws IOException {
                 try {
                     //TODO: Respond only to the sender (body is json, with key 'from')
-                    JSONObject msg = new JSONObject(new String(body, "UTF-8"));
+                    JSONObject msg = new JSONObject(new java.lang.String(body, "UTF-8"));
                     System.out.println(body);
                     sendMessage(msg.getString("from"), "pong");
                 } catch (Exception ex) {
@@ -60,28 +59,28 @@ public class QueueHandler {
      * @param message the message containing JSON
      * @throws Exception
      */
-    public void sendMessage(String flag, String message) throws Exception {
+    public void sendMessage(java.lang.String flag, java.lang.String message) throws Exception {
         //Envoie un message à un certain exchanger, avec un certain flag.
         this.channel.basicPublish(EXCHANGE_NAME, flag, null, message.getBytes("UTF-8"));
         System.out.println(" [x] Sent '" + flag + "' : '" + message + "'");
     }
 
-    private static String getFlags(String[] strings) {
+    private static java.lang.String getFlags(java.lang.String[] strings) {
         if (strings.length < 1) {
             return DEFAULTFLAG;
         }
         return strings[0];
     }
 
-    private static String getMessage(String[] strings) {
-        Pattern pattern = new Pattern();
+    private static java.lang.String getMessage(java.lang.String[] strings) {
+        String pattern = new String();
         if (strings.length < 2) {
-            return pattern.getDescription();
+            return pattern;
         }
         return joinStrings(strings, " ", 1);
     }
 
-    private static String joinStrings(String[] strings, String delimiter, int startIndex) {
+    private static java.lang.String joinStrings(java.lang.String[] strings, java.lang.String delimiter, int startIndex) {
         int length = strings.length;
         if (length == 0) {
             return "";
@@ -99,7 +98,7 @@ public class QueueHandler {
     public void onMessage(MessageListener messageListener) throws IOException {
         Consumer consumer = new DefaultConsumer(channel) {
             @Override
-            public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body)
+            public void handleDelivery(java.lang.String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body)
                     throws IOException {
                 messageListener.onMessage(consumerTag, body);
 
