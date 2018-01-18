@@ -12,8 +12,6 @@ public class ControlerList {
 
     private static void initList() {
         Pattern p = new Pattern();
-        p.addFeu(new FeuVoiture());
-        p.addFeu(new FeuPieton());
         controlers.add(new Controler("ctrl1", p));
         controlers.add(new Controler("ctrl2", p));
         controlers.add(new Controler("ctrl3", p));

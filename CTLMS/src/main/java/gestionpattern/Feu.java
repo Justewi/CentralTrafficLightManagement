@@ -1,5 +1,8 @@
 package gestionpattern;
 
+/*
+Obsolète dû au nouveau modèle de donnée
+ */
 public abstract class Feu {
 
     protected int timeRed;

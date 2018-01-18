@@ -1,5 +1,8 @@
 package gestionpattern;
 
+/*
+Obsolète dû au nouveau modèle de donnée
+ */
 public class FeuVoiture extends Feu {
 
     public static int DEFAULT_GREEN_DURATION = 10;

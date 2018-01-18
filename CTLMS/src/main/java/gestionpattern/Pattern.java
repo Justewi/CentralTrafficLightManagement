@@ -4,33 +4,26 @@ import java.util.ArrayList;
 
 public class Pattern {
 
-    private ArrayList<Feu> feux;
+    public static int DEFAULT_NORTH_SOUTH_AXIS_TIME = 20;
+    public static int DEFAULT_EAST_WEST_AXIS_TIME = 20;
+
+    private int nsAxisTime;
+    private int ewAxisTime;
 
     public Pattern() {
-        feux = new ArrayList<Feu>();
+        nsAxisTime = DEFAULT_NORTH_SOUTH_AXIS_TIME;
+        ewAxisTime = DEFAULT_EAST_WEST_AXIS_TIME;
+    }
+
+    public Pattern(int nsAxisTime, int ewAxisTime) {
+        this.nsAxisTime = nsAxisTime;
+        this.ewAxisTime = ewAxisTime;
     }
 
     public String getDescription() {
-        String description = "{ \"pattern\" : ";
-        if (feux.size() == 0) {
-            description += "\"default\"";
-        } else {
-            description += "{ \"feux\" : [";
-            for (Feu f : feux) {
-                description += f.getDescription();
-            }
-            description += "] }";
-        }
-
-        description += " }";
+        String description = "\"pattern\" {";
+        description += "\"NS\" : "+nsAxisTime + ", ";
+        description += "\"EW\" : "+ewAxisTime + " }";
         return description;
-    }
-
-    public ArrayList<Feu> getFeux() {
-        return feux;
-    }
-
-    public void addFeu(Feu feu) {
-        this.feux.add(feu);
     }
 }
