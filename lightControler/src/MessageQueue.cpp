@@ -2,7 +2,7 @@
 
 #include <vector>
 
-MessageQueue::MessageQueue(std::string identifier, std::string serverAddr, unsigned int serverPort, AMQP::MessageCallback onMessage)
+MessageQueue::MessageQueue(std::string identifier, std::string serverAddr, unsigned int serverPort, std::function<void(std::string) > onMessage)
 : identifier(identifier), mqConnection(&mqHandler, "amqp://" + serverAddr + ":" + std::to_string(serverPort)),
 channel(&mqConnection) {
     channel.declareQueue(identifier);
@@ -11,7 +11,9 @@ channel(&mqConnection) {
     channel.bindQueue("ctlms_exchanger", identifier, identifier);
     channel.consume(identifier).onSuccess([]() {
         std::cout << "Starting to consume messages." << std::endl;
-    }).onMessage(onMessage).onError([](const char *message) {
+    }).onMessage([onMessage](const AMQP::Message &message, uint64_t deliveryTag, bool redelivered) {
+        onMessage(std::string(message.body(), message.bodySize()));
+    }).onError([](const char *message) {
         std::cout << "Error with the consumer: " << message << std::endl;
     });
 }

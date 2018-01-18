@@ -2,13 +2,13 @@
 #include <string>
 #include <thread>
 #include <csignal>
-
+#include <algorithm>
 #include <unistd.h>
 #include <nlohmann/json.hpp>
 #include <csignal>
-#include "ControlerSocket.h"
 #include "MessageQueue.h"
 #include "Logger.h"
+#include "Controler.h"
 
 #include <chrono>
 
@@ -50,33 +50,21 @@ int main(int argc, char** argv) {
     Logger log(std::cout, "[" + identifier + "] ");
 
     std::cout << "Connecting to " << serverAddr << ":" << serverPort << std::endl;
-    bool isRunning = true;
-    std::chrono::steady_clock::time_point pingStart;
-    MessageQueue mq(identifier, serverAddr, serverPort, [&](const AMQP::Message& message, uint64_t deliveryTag, bool redelivered) {
-        std::string msg(message.body(), message.bodySize());
-        std::cout << "Message received " << msg << std::endl;
-        if (msg == "stop") {
-            std::cout << "Received stop command, switching everything off. Have fun with no trafic lights." << std::endl;
-                    isRunning = false;
-        } else if (msg == "pong") {
-            std::cout << "Ping response received in " << std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - pingStart).count() << "ms." << std::endl;
-        }
-    });
+    Controler ctrl(identifier, serverAddr, serverPort);
 
     // Wait for a walker to push the button (Through SIGUSR1)
     std::signal(SIGUSR1, handleWalkerSignal);
     std::signal(SIGUSR2, handlePingSignal);
 
-    while (isRunning) {
-        mq.update();
-        // TODO: logic here
+
+    while (true) {
+        ctrl.update();
         if (wasPassageRequested) {
-            mq.notifyPedestrian("N");
+            ctrl.notifyPedestrian(Direction::NS);
             wasPassageRequested = false;
         }
         if (wasPingRequested) {
-            mq.notifyServer("PING", "{\"key\":\"qsd\",\"from\":\"" + identifier + "\"}");
-            pingStart = std::chrono::steady_clock::now();
+            ctrl.ping();
             wasPingRequested = false;
         }
     }

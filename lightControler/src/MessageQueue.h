@@ -43,14 +43,9 @@ class MessageQueue {
     AMQP::TcpConnection mqConnection;
     AMQP::TcpChannel channel;
 public:
-    MessageQueue(std::string identifier, std::string serverAddr, unsigned int serverPort, AMQP::MessageCallback onMessage);
+    MessageQueue(std::string identifier, std::string serverAddr, unsigned int serverPort, std::function<void(std::string) > onMessage);
     virtual ~MessageQueue();
     void update();
-
-    void notifyPedestrian(std::string direction) {
-        channel.publish("ctlms_exchanger", "PEDESTRIAN", "{\"direction\":\"" + direction + "\"}");
-        std::cout << "Pedestrian notification sent" << std::endl;
-    };
 
     void notifyServer(std::string title, std::string content) {
         channel.publish("ctlms_exchanger", title, content);
