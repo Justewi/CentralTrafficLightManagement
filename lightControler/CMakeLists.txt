@@ -7,7 +7,7 @@ set(CMAKE_CXX_FLAGS "-lamqpcpp -pthread")
 include_directories(third_party)
 
 set(SOURCE_FILES
-        src/ControlerSocket.cpp
+        src/Controler.cpp
         src/MessageQueue.cpp
         src/main.cpp)
 add_executable(lightCtrlR ${SOURCE_FILES})

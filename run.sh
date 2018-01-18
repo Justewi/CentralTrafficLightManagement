@@ -17,6 +17,8 @@ docker-compose up ctlms
 
 #docker-compose run controller
 
+read -p "Press enter to continue"
+
 echo -e "${RED}\nShutting down the whole system${NC}\n"
 docker-compose down
 docker network rm street_network
