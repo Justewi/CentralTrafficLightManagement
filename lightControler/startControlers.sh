@@ -14,6 +14,16 @@ serverPort=""
 [[ $# -gt 2 ]] && serverPort=$3
 
 declare -a processes
+kill_processes(){
+    echo "Killing all processes..."
+    kill ${processes[@]}
+    echo "Done. Bye."
+}
+handle_sigint(){
+    kill_processes
+    exit 0
+}
+trap handle_sigint SIGINT
 
 for ((i = 1; i <= $1; i++)); do
     ./controler "ctrl$i" $serverAddr $serverPort &
@@ -39,6 +49,4 @@ while true ; do
     esac
 done
 
-echo "Killing all processes..."
-kill ${processes[@]}
-echo "Done. Bye."
+kill_processes
