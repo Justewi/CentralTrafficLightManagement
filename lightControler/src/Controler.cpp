@@ -7,38 +7,14 @@ identifier(identifier),
 cur(NS),
 currentPattern({nsTime : std::chrono::seconds(10), ewTime : std::chrono::seconds(10)}),
 lastChange(std::chrono::steady_clock::now()),
-mq(identifier, serverAddr, serverPort, [&](std::string msg) {
-    std::cout << "Message received " << msg << std::endl;
-    std::string cmd;
-    nlohmann::json j;
-    auto jsonStart = std::find(msg.begin(), msg.end(), '{');
-    if (jsonStart == msg.end()) { // There is no data
-        cmd = msg;
-    } else {
-        cmd = std::string(msg.begin(), jsonStart);
-                j = nlohmann::json::parse(jsonStart, msg.end());
-    }
-
-    if (msg == "stop") {
-        std::cout << "Received stop command, switching everything off. Have fun with no trafic lights." << std::endl;
-                isRunning = false;
-    } else if (msg == "pong") {
-        std::cout << "Ping response received in " << std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - pingStart).count() << "ms." << std::endl;
-    } else if (msg == "pattern") {
-
-        std::cout << "New pattern received. Starting it." << std::endl;
-                int nsTimer = j["NS"];
-                int ewTimer = j["EW"];
-                // TODO: Timestamp
-
-    }
-}) {
+mq(identifier, serverAddr, serverPort, std::bind(&Controler::handleMessage, this, std::placeholders::_1)) {
 }
 
 Controler::~Controler() {
 }
 
 void Controler::update() {
+    mq.update();
     if (std::chrono::steady_clock::now() - lastChange > (cur == NS ? currentPattern.nsTime : currentPattern.ewTime)) {
         cur = cur == NS ? EW : NS;
         lastChange = std::chrono::steady_clock::now();
@@ -54,4 +30,32 @@ void Controler::ping() {
 void Controler::notifyPedestrian(Direction d) {
     // TODO: We can't identify which light sent this message
     mq.notifyServer("PEDESTRIAN", std::string("{\"direction\":\"") + (d == NS ? "NS" : "EW") + "\"}");
+}
+
+void Controler::handleMessage(std::string msg) {
+    std::cout << "Message received " << msg << std::endl;
+    std::string cmd;
+    nlohmann::json j;
+
+    // Fetch the command and data (if any)
+    auto jsonStart = std::find(msg.begin(), msg.end(), '{');
+    if (jsonStart == msg.end()) { // There is no data
+        cmd = msg;
+    } else {
+        cmd = std::string(msg.begin(), jsonStart);
+        j = nlohmann::json::parse(jsonStart, msg.end());
+    }
+
+    // Handle the command
+    if (cmd == "stop") {
+        std::cout << "Received stop command, switching everything off. Have fun with no trafic lights." << std::endl;
+        isRunning = false;
+    } else if (cmd == "pong") {
+        std::cout << "Ping response received in " << std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - pingStart).count() << "ms." << std::endl;
+    } else if (cmd == "pattern") {
+        std::cout << "New pattern received. Starting it." << std::endl;
+        currentPattern.nsTime = std::chrono::seconds(j["NS"]);
+        currentPattern.ewTime = std::chrono::seconds(j["EW"]);
+        // TODO: Timestamp
+    }
 }

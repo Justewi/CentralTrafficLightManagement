@@ -1,20 +1,18 @@
 package annuaire;
 
-import gestionpattern.FeuPieton;
-import gestionpattern.FeuVoiture;
 import gestionpattern.Pattern;
 
 import java.util.ArrayList;
 
 public class ControlerList {
-    private static ArrayList<Controler> controlers = new ArrayList<Controler>();
 
+    private static ArrayList<Controler> controlers = new ArrayList<Controler>();
 
     private static void initList() {
         Pattern p = new Pattern();
-        controlers.add(new Controler("ctrl1", p));
-        controlers.add(new Controler("ctrl2", p));
-        controlers.add(new Controler("ctrl3", p));
+        controlers.add(new Controler("ctrl1", new Pattern(10, 10)));
+        controlers.add(new Controler("ctrl2", new Pattern(10, 5)));
+        controlers.add(new Controler("ctrl3", new Pattern(5, 20)));
     }
 
     public static ArrayList<Controler> getControlers() {

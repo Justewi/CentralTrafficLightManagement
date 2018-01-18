@@ -41,7 +41,6 @@ public class QueueHandler {
             @Override
             public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) throws IOException {
                 try {
-                    //TODO: Respond only to the sender (body is json, with key 'from')
                     JSONObject msg = new JSONObject(new String(body, "UTF-8"));
                     System.out.println(body);
                     sendMessage(msg.getString("from"), "pong");

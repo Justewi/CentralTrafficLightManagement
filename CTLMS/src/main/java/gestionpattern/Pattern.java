@@ -1,7 +1,5 @@
 package gestionpattern;
 
-import java.util.ArrayList;
-
 public class Pattern {
 
     public static int DEFAULT_NORTH_SOUTH_AXIS_TIME = 20;
@@ -21,9 +19,9 @@ public class Pattern {
     }
 
     public String getDescription() {
-        String description = "\"pattern\" {";
-        description += "\"NS\" : "+nsAxisTime + ", ";
-        description += "\"EW\" : "+ewAxisTime + " }";
+        String description = "pattern{";
+        description += "\"NS\" : " + nsAxisTime + ", ";
+        description += "\"EW\" : " + ewAxisTime + " }";
         return description;
     }
 }

@@ -33,6 +33,7 @@ public:
     void update();
     void ping();
     void notifyPedestrian(enum Direction d);
+    void handleMessage(std::string msg);
 };
 
 #endif /* CONTROLER_H */
