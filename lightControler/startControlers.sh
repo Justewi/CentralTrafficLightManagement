@@ -6,7 +6,6 @@
 
 echo "Starting controlers script"
 EXE_NAME=controler
-LOG_FILE=/tmp/log.txt
 
 serverAddr=""
 serverPort=""
@@ -28,7 +27,7 @@ handle_sigint(){
 trap handle_sigint SIGINT
 
 for ((i = 1; i <= $1; i++)); do
-    ./${EXE_NAME} "ctrl$i" $serverAddr $serverPort >> ${LOG_FILE} &
+    ./${EXE_NAME} "ctrl$i" $serverAddr $serverPort &
     processes+=($!)
 done
 
