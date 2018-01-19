@@ -46,6 +46,7 @@ int main(int argc, char** argv) {
     }
 
     Logger log(std::cout, "[" + identifier + "] ");
+    std::cout << "Controler version indicator : 1.0" << std::endl;
 
     std::cout << "Connecting to " << serverAddr << ":" << serverPort << std::endl;
     Controler ctrl(identifier, serverAddr, serverPort);
