@@ -11,8 +11,9 @@ channel(&mqConnection) {
     channel.bindQueue("ctlms_exchanger", identifier, identifier);
     channel.consume(identifier).onSuccess([]() {
         std::cout << "Starting to consume messages." << std::endl;
-    }).onMessage([onMessage](const AMQP::Message &message, uint64_t deliveryTag, bool redelivered) {
+    }).onMessage([onMessage, this](const AMQP::Message &message, uint64_t deliveryTag, bool redelivered) {
         onMessage(std::string(message.body(), message.bodySize()));
+        channel.ack(deliveryTag); // Delete the message from the queue
     }).onError([](const char *message) {
         std::cout << "Error with the consumer: " << message << std::endl;
     });
