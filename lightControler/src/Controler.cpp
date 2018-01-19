@@ -27,7 +27,7 @@ void Controler::ping() {
         {"key", "zqsd"}, // TODO: Generate a small random string or int?
         {"from", identifier}
     };
-    mq.notifyServer("PING", j);
+    mq.notifyServer("PING", j.dump());
     pingStart = std::chrono::steady_clock::now();
 }
 
@@ -36,7 +36,7 @@ void Controler::notifyPedestrian(Direction d) {
         {"direction", (d == NS ? "NS" : "EW")},
         {"sender", identifier}
     };
-    mq.notifyServer("PEDESTRIAN", j);
+    mq.notifyServer("PEDESTRIAN", j.dump());
 }
 
 void Controler::handleMessage(std::string msg) {
