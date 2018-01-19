@@ -6,6 +6,7 @@ function join_by { local d=$1; shift; echo -n "$1"; shift; printf "%s" "${@/#/$d
 
 for i in "${size[@]}"
 do :
+  ./startControlers.sh $i localhost 5672 > bench/bench_$i.log
   python benchmark_ping.py < bench/bench_$i.log > bench/bench_$i.res
 done
 #echo \"$(join_by " " ${size[@]})\"
