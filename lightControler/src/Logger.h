@@ -18,7 +18,8 @@ protected:
         if (ch != '\n' && isAtStartOfLine) {
             myDest->sputn(prependData.data(), prependData.size());
         }
-        isAtStartOfLine = ch == '\n';
+        if (isAtStartOfLine = ch == '\n')
+            myDest->pubsync(); // Request sync, otherwise it won't write to file
         return myDest->sputc(ch);
     }
 public:
@@ -32,6 +33,7 @@ public:
     };
 
     virtual ~Logger() {
+        myDest->pubsync(); // Request sync, otherwise it won't write to file (bash redirection)
         if (myOwner != nullptr) {
             myOwner->rdbuf(myDest);
         }
