@@ -23,13 +23,20 @@ void Controler::update() {
 }
 
 void Controler::ping() {
-    mq.notifyServer("PING", "{\"key\":\"qsd\",\"from\":\"" + identifier + "\"}");
+    nlohmann::json j = {
+        {"key", "zqsd"}, // TODO: Generate a small random string or int?
+        {"from", identifier}
+    };
+    mq.notifyServer("PING", j);
     pingStart = std::chrono::steady_clock::now();
 }
 
 void Controler::notifyPedestrian(Direction d) {
-    // TODO: We can't identify which light sent this message
-    mq.notifyServer("PEDESTRIAN", std::string("{\"direction\":\"") + (d == NS ? "NS" : "EW") + "\"}");
+    nlohmann::json j = {
+        {"direction", (d == NS ? "NS" : "EW")},
+        {"sender", identifier}
+    };
+    mq.notifyServer("PEDESTRIAN", j);
 }
 
 void Controler::handleMessage(std::string msg) {
