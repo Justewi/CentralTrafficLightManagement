@@ -15,6 +15,8 @@ serverPort=""
 
 declare -a processes
 kill_processes(){
+    cat run.log
+    #rm run.log
     echo "Killing all processes..."
     kill ${processes[@]}
     echo "Done. Bye."
