@@ -23,7 +23,9 @@ class Controler {
 
     enum Direction cur;
     struct Timers currentPattern;
-    std::chrono::steady_clock::time_point lastChange;
+    struct Timers nextPattern;
+    std::chrono::system_clock::time_point nextChange;
+    std::chrono::system_clock::time_point nextPatternStart;
 
 public:
 
