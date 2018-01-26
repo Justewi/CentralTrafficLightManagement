@@ -9,6 +9,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
+import java.io.UnsupportedEncodingException;
+import java.util.logging.Level;
+
 @SpringBootApplication
 public class Application {
 
@@ -58,10 +61,9 @@ public class Application {
 
 
             //A adapter avec la couche de persistance et pas controler list
-
             String host = DEFAULT_RABBITMQ_IP;
-            if (argv.length > 0) {
-                host = argv[0];
+            if (args.length > 0) {
+                host = args[0];
             }
             System.out.println("Connexion a RabbitMQ a l'adresse " + host + ":" + DEFAULT_RABBITMQ_PORT + " ...");
 
@@ -86,13 +88,13 @@ public class Application {
                         ControlerList.sendModifiedPattern(qh);
                         System.out.println("");
                     } catch (UnsupportedEncodingException ex) {
-                        Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
             });
 
             // TODO: Things ? Or a better way to do this.
             while (true);
+
 
         };
     }
