@@ -10,4 +10,4 @@ set(SOURCE_FILES
         src/Controler.cpp
         src/MessageQueue.cpp
         src/main.cpp)
-add_executable(lightCtrlR ${SOURCE_FILES})
+add_executable(controler ${SOURCE_FILES})

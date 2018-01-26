@@ -5,6 +5,7 @@
 #
 
 echo "Starting controlers script"
+EXE_NAME=controler
 
 serverAddr=""
 serverPort=""
@@ -15,8 +16,6 @@ serverPort=""
 
 declare -a processes
 kill_processes(){
-    cat run.log
-    #rm run.log
     echo "Killing all processes..."
     kill ${processes[@]}
     echo "Done. Bye."
@@ -28,7 +27,7 @@ handle_sigint(){
 trap handle_sigint SIGINT
 
 for ((i = 1; i <= $1; i++)); do
-    ./controler "ctrl$i" $serverAddr $serverPort &
+    ./${EXE_NAME} "ctrl$i" $serverAddr $serverPort &
     processes+=($!)
 done
 

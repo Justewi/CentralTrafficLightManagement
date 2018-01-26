@@ -6,7 +6,7 @@ Controler::Controler(std::string identifier, std::string serverAddr, unsigned in
 identifier(identifier),
 cur(NS),
 currentPattern({nsTime : std::chrono::seconds(10), ewTime : std::chrono::seconds(10)}),
-lastChange(std::chrono::steady_clock::now()),
+nextChange(std::chrono::system_clock::now()),
 mq(identifier, serverAddr, serverPort, std::bind(&Controler::handleMessage, this, std::placeholders::_1)) {
 }
 
@@ -15,9 +15,16 @@ Controler::~Controler() {
 
 void Controler::update() {
     mq.update();
-    if (std::chrono::steady_clock::now() - lastChange > (cur == NS ? currentPattern.nsTime : currentPattern.ewTime)) {
+    if (std::chrono::system_clock::now() >= nextPatternStart) {
+        currentPattern = nextPattern;
+        cur = NS;
+        nextChange = nextPatternStart + currentPattern.nsTime;
+        nextPatternStart = std::chrono::system_clock::time_point::max();
+        std::cout << "Starting new pattern." << std::endl;
+    }
+    if (std::chrono::system_clock::now() >= nextChange) {
         cur = cur == NS ? EW : NS;
-        lastChange = std::chrono::steady_clock::now();
+        nextChange += (cur == NS ? currentPattern.nsTime : currentPattern.ewTime);
         std::cout << "Changing light to " << (cur == NS ? "North-South" : "Est-West") << std::endl;
     }
 }
@@ -27,7 +34,7 @@ void Controler::ping() {
         {"key", "zqsd"}, // TODO: Generate a small random string or int?
         {"from", identifier}
     };
-    mq.notifyServer("PING", j);
+    mq.notifyServer("PING", j.dump());
     pingStart = std::chrono::steady_clock::now();
 }
 
@@ -36,7 +43,7 @@ void Controler::notifyPedestrian(Direction d) {
         {"direction", (d == NS ? "NS" : "EW")},
         {"sender", identifier}
     };
-    mq.notifyServer("PEDESTRIAN", j);
+    mq.notifyServer("PEDESTRIAN", j.dump());
 }
 
 void Controler::handleMessage(std::string msg) {
@@ -60,9 +67,10 @@ void Controler::handleMessage(std::string msg) {
     } else if (cmd == "pong") {
         std::cout << "Ping response received in " << std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - pingStart).count() << "ms." << std::endl;
     } else if (cmd == "pattern") {
-        std::cout << "New pattern received. Starting it." << std::endl;
-        currentPattern.nsTime = std::chrono::seconds(j["NS"]);
-        currentPattern.ewTime = std::chrono::seconds(j["EW"]);
+        std::cout << "New pattern received." << std::endl;
+        nextPattern.nsTime = std::chrono::seconds(j["NS"]);
+        nextPattern.ewTime = std::chrono::seconds(j["EW"]);
+        nextPatternStart = std::chrono::system_clock::time_point(std::chrono::seconds(j["startTime"]));
         // TODO: Timestamp
     }
 }

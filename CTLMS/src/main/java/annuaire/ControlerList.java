@@ -1,18 +1,19 @@
 package annuaire;
 
 import gestionpattern.Pattern;
-
 import java.util.ArrayList;
+import java.util.Random;
 
 public class ControlerList {
 
     private static ArrayList<Controler> controlers = new ArrayList<Controler>();
+    private static Random r = new Random(3);
 
     private static void initList() {
-        Pattern p = new Pattern();
-        controlers.add(new Controler("ctrl1", new Pattern(10, 10)));
-        controlers.add(new Controler("ctrl2", new Pattern(10, 5)));
-        controlers.add(new Controler("ctrl3", new Pattern(5, 20)));
+        controlers = new ArrayList<>();
+        controlers.add(new Controler("ctrl1", new Pattern(r.nextInt(20), r.nextInt(20), r.nextInt(20) + System.currentTimeMillis() / 1000)));
+        controlers.add(new Controler("ctrl2", new Pattern(r.nextInt(20), r.nextInt(20), r.nextInt(20) + System.currentTimeMillis() / 1000)));
+        controlers.add(new Controler("ctrl3", new Pattern(r.nextInt(20), r.nextInt(20), r.nextInt(20) + System.currentTimeMillis() / 1000)));
     }
 
     public static ArrayList<Controler> getControlers() {
@@ -36,6 +37,7 @@ public class ControlerList {
     }
 
     public static void sendModifiedPattern(QueueHandler qh) {
+        initList();
         for (Controler c : controlers) {
             try {
                 qh.sendMessage(c.getFlagId(), c.getPattern().getDescription());

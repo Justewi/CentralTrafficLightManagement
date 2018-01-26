@@ -8,7 +8,7 @@ mkdir build
 cd build
 cmake ..
 make
-cp lightCtrlR ../controler
+cp controler ..
 cd ..
 rm -rf build
 
