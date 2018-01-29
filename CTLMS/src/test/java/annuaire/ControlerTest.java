@@ -1,8 +1,14 @@
 package annuaire;
 
+import annuaire.repository.ControllerRepository;
+import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
@@ -11,16 +17,31 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+@RunWith(SpringJUnit4ClassRunner.class)
 public class ControlerTest {
-    //To refactor with persistance layer (not done yet)
-    /*@Test
-    public void initializationTest() throws Exception {
-        assertEquals(3, ControlerList.getControlers().size());
+
+    @Autowired
+    ControllerRepository controllerRepository;
+
+
+    @Before
+    public void init(){
+
+        controllerRepository.save(new Controler("ctl1" , "{ \"pattern\" : \"default\" }"));
+        controllerRepository.save(new Controler("ctl2" , "{ \"pattern\" : \"default\" }"));
+        controllerRepository.save(new Controler("ctl3" , "{ \"pattern\" : \"default\" }"));
+        controllerRepository.save(new Controler("ctl4" , "{ \"pattern\" : \"default\" }"));
+
+    }
+
+    @Test
+    public void contextLoads() {
+
     }
 
     @Test
     public void flagsTest() throws Exception {
-        assertEquals("ctrl2", ControlerList.getControler(1).getFlagId());
+        assertEquals("ctrl2", controllerRepository.findOne("ctrl2").getFlagId());
     }
 
     @Test
@@ -30,10 +51,17 @@ public class ControlerTest {
         ArgumentCaptor<String> desc_captor = ArgumentCaptor.forClass(String.class);
         doNothing().when(qh_mocked).sendMessage(flag_captor.capture(), desc_captor.capture());
 
-        ControlerList.sendModifiedPattern(qh_mocked);
 
+        for (Controler controlers : controllerRepository.findAll()) {
+            try {
+                qh_mocked.sendMessage(controlers.getFlagId(),controlers.getPattern() );
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         for (int i = 0; i < flag_captor.getAllValues().size(); i++) {
             assertEquals("ctrl" + Integer.toString(i + 1), flag_captor.getAllValues().get(i));
         }
-    }*/
+    }
 }

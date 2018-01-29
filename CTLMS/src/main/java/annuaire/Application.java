@@ -86,6 +86,16 @@ public class Application {
                 @Override
                 public void onMessage(String tag, byte[] body) {
                     try {
+
+
+                        /*
+                            repository.save(new Controler("ctl1" , "{ \"pattern\" : \"default\" }"));
+                            repository.save(new Controler("ctl2" , "{ \"pattern\" : \"default\" }"));
+                            repository.save(new Controler("ctl3" , "{ \"pattern\" : \"default\" }"));
+                            repository.save(new Controler("ctl4" , "{ \"pattern\" : \"default\" }"));
+                            repository.save(new Controler("ctl5" , "{ \"pattern\" : \"default\" }"));
+                         */
+
                         String message = new String(body, "UTF-8");
                         System.out.println(" [x] Received '" + message + "'");
                         //Envoie des patterns après reception du message et eventuelle modification
