@@ -1,30 +1,42 @@
 package annuaire;
 
-import gestionpattern.Pattern;
+import org.springframework.data.annotation.Id;
 
 public class Controler {
 
-    private String flagId;
-    private Pattern pattern;
+    @Id
+    private java.lang.String flagId;
+    private String pattern;
+
+    protected Controler() {
+    }
 
     public Controler(String flagId) {
         this.flagId = flagId;
     }
 
-    public Controler(String flagId, Pattern pattern) {
+    public Controler(String flagId, String pattern) {
         this.flagId = flagId;
         this.pattern = pattern;
     }
 
-    public Pattern getPattern() {
+    @Override
+    public java.lang.String toString() {
+        return "Controler{" +
+                "flagId='" + flagId + '\'' +
+                ", pattern=" + pattern +
+                '}';
+    }
+
+    public String getPattern() {
         return pattern;
     }
 
-    public void setPattern(Pattern pattern) {
+    public void setPattern(String pattern) {
         this.pattern = pattern;
     }
 
-    public String getFlagId() {
+    public java.lang.String getFlagId() {
         return flagId;
     }
 
