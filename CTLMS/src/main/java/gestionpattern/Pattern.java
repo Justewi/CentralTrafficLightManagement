@@ -1,9 +1,7 @@
 package gestionpattern;
 
-import javax.persistence.Entity;
 import java.util.ArrayList;
 
-@Entity
 public class Pattern {
 
     private ArrayList<Feu> feux;

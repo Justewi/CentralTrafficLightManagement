@@ -11,9 +11,9 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class ControlerListTest {
-
-    @Test
+public class ControlerTest {
+    //To refactor with persistance layer (not done yet)
+    /*@Test
     public void initializationTest() throws Exception {
         assertEquals(3, ControlerList.getControlers().size());
     }
@@ -35,5 +35,5 @@ public class ControlerListTest {
         for (int i = 0; i < flag_captor.getAllValues().size(); i++) {
             assertEquals("ctrl" + Integer.toString(i + 1), flag_captor.getAllValues().get(i));
         }
-    }
+    }*/
 }

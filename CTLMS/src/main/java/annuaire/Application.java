@@ -8,10 +8,11 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.UnsupportedEncodingException;
-import java.util.logging.Level;
 
+@Transactional
 @SpringBootApplication
 public class Application {
 
@@ -28,11 +29,6 @@ public class Application {
     public CommandLineRunner demo(ControllerRepository repository) {
         return (args) -> {
             // save a couple of customers
-            repository.save(new Controler("ctl1", "{ \"pattern\" : \"default\" "));
-            repository.save(new Controler("ctl2", "{ \"pattern\" : \"default\" "));
-            repository.save(new Controler("ctl3", "{ \"pattern\" : \"default\" "));
-            repository.save(new Controler("ctl4", "{ \"pattern\" : \"default\" "));
-            repository.save(new Controler("ctl5", "{ \"pattern\" : \"default\" "));
 
             // fetch all customers
             log.info("Customers found with findAll():");
@@ -74,7 +70,14 @@ public class Application {
             //Ici à terme on aura théoriquement une boucle qui attends qu'on lui dise d'envoyer des messages.
             //et qui les enverra comme ci dessous:
             System.out.println("Envoi des patterns aux controleurs connus");
-            ControlerList.sendInitPattern(qh);
+            //Envoi des patterns par défaut
+            for (Controler controlers : repository.findAll()) {
+                try {
+                    qh.sendMessage(controlers.getFlagId(),"{ \"pattern\" : \"default\" }" );
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
             System.out.println("Patterns initiaux envoyes");
 
             System.out.println(" [*] Attente de message. CTRL+C pour quitter");
@@ -85,7 +88,15 @@ public class Application {
                     try {
                         String message = new String(body, "UTF-8");
                         System.out.println(" [x] Received '" + message + "'");
-                        ControlerList.sendModifiedPattern(qh);
+                        //Envoie des patterns après reception du message et eventuelle modification
+                        for (Controler controlers : repository.findAll()) {
+                            try {
+                                qh.sendMessage(controlers.getFlagId(),controlers.getPattern() );
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
                         System.out.println("");
                     } catch (UnsupportedEncodingException ex) {
                     }
