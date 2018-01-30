@@ -18,6 +18,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = {SpringMongoConfiguration.class})
 public class ControlerTest {
 
     @Autowired
@@ -41,7 +42,7 @@ public class ControlerTest {
 
     @Test
     public void flagsTest() throws Exception {
-        assertEquals("ctrl2", controllerRepository.findOne("ctrl2").getFlagId());
+        assertEquals("ctl2", controllerRepository.findOne("ctl2").getFlagId());
     }
 
     @Test
@@ -61,7 +62,7 @@ public class ControlerTest {
             }
         }
         for (int i = 0; i < flag_captor.getAllValues().size(); i++) {
-            assertEquals("ctrl" + Integer.toString(i + 1), flag_captor.getAllValues().get(i));
+            assertEquals("ctl" + Integer.toString(i + 1), flag_captor.getAllValues().get(i));
         }
     }
 }
