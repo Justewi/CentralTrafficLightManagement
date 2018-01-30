@@ -9,6 +9,7 @@ public class Pattern {
     private int ewAxisTime;
     private long startTime; // The start time in seconds
 
+
     public Pattern() {
         nsAxisTime = DEFAULT_NORTH_SOUTH_AXIS_TIME;
         ewAxisTime = DEFAULT_EAST_WEST_AXIS_TIME;
