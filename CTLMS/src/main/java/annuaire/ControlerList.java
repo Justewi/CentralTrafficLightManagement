@@ -11,9 +11,12 @@ public class ControlerList {
 
     private static void initList() {
         controlers = new ArrayList<>();
-        controlers.add(new Controler("ctrl1", new Pattern(r.nextInt(20), r.nextInt(20), r.nextInt(20) + System.currentTimeMillis() / 1000)));
-        controlers.add(new Controler("ctrl2", new Pattern(r.nextInt(20), r.nextInt(20), r.nextInt(20) + System.currentTimeMillis() / 1000)));
-        controlers.add(new Controler("ctrl3", new Pattern(r.nextInt(20), r.nextInt(20), r.nextInt(20) + System.currentTimeMillis() / 1000)));
+//        controlers.add(new Controler("ctrl1", new Pattern(r.nextInt(20), r.nextInt(20), r.nextInt(20) + System.currentTimeMillis() / 1000)));
+//        controlers.add(new Controler("ctrl2", new Pattern(r.nextInt(20), r.nextInt(20), r.nextInt(20) + System.currentTimeMillis() / 1000)));
+//        controlers.add(new Controler("ctrl3", new Pattern(r.nextInt(20), r.nextInt(20), r.nextInt(20) + System.currentTimeMillis() / 1000)));
+        controlers.add(new Controler("ctrl1", new Pattern(7, 7, System.currentTimeMillis() / 1000)));
+        controlers.add(new Controler("ctrl2", new Pattern(7, 7, 2 + System.currentTimeMillis() / 1000)));
+        controlers.add(new Controler("ctrl3", new Pattern(7, 7, 4 + System.currentTimeMillis() / 1000)));
     }
 
     public static ArrayList<Controler> getControlers() {

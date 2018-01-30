@@ -42,7 +42,7 @@ public class QueueHandler {
             public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) throws IOException {
                 try {
                     JSONObject msg = new JSONObject(new String(body, "UTF-8"));
-                    System.out.println(body);
+                    //System.out.println(body);
                     sendMessage(msg.getString("from"), "pong");
                 } catch (Exception ex) {
                     Logger.getLogger(QueueHandler.class.getName()).log(Level.SEVERE, null, ex);

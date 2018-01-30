@@ -5,9 +5,10 @@ Controler::Controler(std::string identifier, std::string serverAddr, unsigned in
 :
 identifier(identifier),
 cur(NS),
-currentPattern({nsTime : std::chrono::seconds(10), ewTime : std::chrono::seconds(10)}),
-nextChange(std::chrono::system_clock::now()),
-mq(identifier, serverAddr, serverPort, std::bind(&Controler::handleMessage, this, std::placeholders::_1)) {
+currentPattern({nsTime : std::chrono::seconds(60), ewTime : std::chrono::seconds(60)}),
+nextChange(std::chrono::system_clock::time_point::max()),
+mq(identifier, serverAddr, serverPort, std::bind(&Controler::handleMessage, this, std::placeholders::_1)),
+nextPatternStart(std::chrono::system_clock::now()){
 }
 
 Controler::~Controler() {
