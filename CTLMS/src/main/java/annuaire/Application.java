@@ -29,6 +29,11 @@ public class Application {
     public CommandLineRunner demo(ControllerRepository repository) {
         return (args) -> {
             // save a couple of customers
+            repository.save(new Controler("ctl1" , "{ \"pattern\" : \"default\" }"));
+            repository.save(new Controler("ctl2" , "{ \"pattern\" : \"default\" }"));
+            repository.save(new Controler("ctl3" , "{ \"pattern\" : \"default\" }"));
+            repository.save(new Controler("ctl4" , "{ \"pattern\" : \"default\" }"));
+            repository.save(new Controler("ctl5" , "{ \"pattern\" : \"default\" }"));
 
             // fetch all customers
             log.info("Customers found with findAll():");
