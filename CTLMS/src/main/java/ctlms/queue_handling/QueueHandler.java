@@ -1,7 +1,8 @@
-package annuaire;
+package ctlms.queue_handling;
 
+import ctlms.model.Pattern;
 import com.rabbitmq.client.*;
-import gestionpattern.Pattern;
+
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;

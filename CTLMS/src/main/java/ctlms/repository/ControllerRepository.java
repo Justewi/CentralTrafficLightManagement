@@ -1,8 +1,8 @@
-package annuaire.repository;
+package ctlms.repository;
 
 import java.util.List;
 
-import annuaire.Controler;
+import ctlms.model.Controler;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;

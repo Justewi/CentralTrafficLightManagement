@@ -1,4 +1,4 @@
-package annuaire;
+package ctlms;
 
 import com.mongodb.MongoClient;
 import org.springframework.context.annotation.Bean;

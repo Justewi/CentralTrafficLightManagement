@@ -1,6 +1,13 @@
-package annuaire;
+package ctlms;
 
-import annuaire.repository.ControllerRepository;
+import ctlms.model.City;
+import ctlms.model.Controler;
+import ctlms.model.Pattern;
+import ctlms.pattern_calculator.PatternCalculator;
+import ctlms.queue_handling.MessageListener;
+import ctlms.queue_handling.QueueHandler;
+import ctlms.repository.CityRepository;
+import ctlms.repository.ControllerRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,6 +26,8 @@ public class Application {
     private static final String DEFAULT_RABBITMQ_IP = "localhost";
     private static final int DEFAULT_RABBITMQ_PORT = 5672;
 
+    private City city;
+
     private static final Logger log = LoggerFactory.getLogger(Application.class);
 
     public static void main(String[] args) {
@@ -26,33 +35,30 @@ public class Application {
     }
 
     @Bean
-    public CommandLineRunner demo(ControllerRepository repository) {
+    public CommandLineRunner demo(ControllerRepository controllerRepository, CityRepository cityRepository) {
         return (args) -> {
             // save a couple of customers
+
+            City nyc = new City(10, 10, "NYC");
+
+            PatternCalculator.greenWaveXY(nyc, 9, 9, 0, 0, 70, 30);
+
+            cityRepository.save(nyc);
+
+            city = cityRepository.findOne("NYC");
+
+            //PatternCalculator.greenWaveXY(city, 1, 1, 10, 10, 70, 30);
+
+            //cityRepository.save(city);
+
 
             // fetch all customers
             log.info("Customers found with findAll():");
             log.info("-------------------------------");
-            for (Controler controler : repository.findAll()) {
+            for (Controler controler : city.getControlerList()) {
                 log.info(controler.toString());
             }
             log.info("");
-
-            // fetch an individual customer by ID
-            Controler controler = repository.findOne("ctl1");
-            log.info("Customer found with findOne(ctl1):");
-            log.info("--------------------------------");
-            log.info(controler.toString());
-            log.info("");
-
-            // fetch customers by last name
-            log.info("Customer found with findByFlagId('ctl5'):");
-            log.info("--------------------------------------------");
-            for (Controler bauer : repository.findByFlagId("ctl5")) {
-                log.info(bauer.toString());
-            }
-            log.info("");
-
 
 
 
@@ -67,13 +73,16 @@ public class Application {
 
             System.out.println("Serveur connecte");
 
+
+            city = cityRepository.findOne("NYC");
+
             //Ici à terme on aura théoriquement une boucle qui attends qu'on lui dise d'envoyer des messages.
             //et qui les enverra comme ci dessous:
             System.out.println("Envoi des patterns aux controleurs connus");
             //Envoi des patterns par défaut
-            for (Controler controlers : repository.findAll()) {
+            for (Controler controlers : city.getControlerList()) {
                 try {
-                    qh.sendMessage(controlers.getFlagId(),"{ \"pattern\" : \"default\" }" );
+                    qh.sendMessage(controlers.getFlagId(),controlers.getPattern().getDescription() );
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -87,21 +96,12 @@ public class Application {
                 public void onMessage(String tag, byte[] body) {
                     try {
 
-
-                        /*
-                            repository.save(new Controler("ctl1" , "{ \"pattern\" : \"default\" }"));
-                            repository.save(new Controler("ctl2" , "{ \"pattern\" : \"default\" }"));
-                            repository.save(new Controler("ctl3" , "{ \"pattern\" : \"default\" }"));
-                            repository.save(new Controler("ctl4" , "{ \"pattern\" : \"default\" }"));
-                            repository.save(new Controler("ctl5" , "{ \"pattern\" : \"default\" }"));
-                         */
-
                         String message = new String(body, "UTF-8");
                         System.out.println(" [x] Received '" + message + "'");
                         //Envoie des patterns après reception du message et eventuelle modification
-                        for (Controler controlers : repository.findAll()) {
+                        for (Controler controlers : city.getControlerList()) {
                             try {
-                                qh.sendMessage(controlers.getFlagId(),controlers.getPattern() );
+                                qh.sendMessage(controlers.getFlagId(),controlers.getPattern().getDescription() );
 
                             } catch (Exception e) {
                                 e.printStackTrace();

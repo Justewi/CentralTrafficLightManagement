@@ -1,6 +1,9 @@
-package annuaire;
+package ctlms;
 
-import annuaire.repository.ControllerRepository;
+import ctlms.model.Controler;
+import ctlms.model.Pattern;
+import ctlms.queue_handling.QueueHandler;
+import ctlms.repository.ControllerRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,10 +15,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {SpringMongoConfiguration.class})
@@ -28,10 +29,10 @@ public class ControlerTest {
     @Before
     public void init(){
 
-        controllerRepository.save(new Controler("ctl1" , "{ \"pattern\" : \"default\" }"));
-        controllerRepository.save(new Controler("ctl2" , "{ \"pattern\" : \"default\" }"));
-        controllerRepository.save(new Controler("ctl3" , "{ \"pattern\" : \"default\" }"));
-        controllerRepository.save(new Controler("ctl4" , "{ \"pattern\" : \"default\" }"));
+        controllerRepository.save(new Controler("ctl1" , new Pattern()));
+        controllerRepository.save(new Controler("ctl2" , new Pattern()));
+        controllerRepository.save(new Controler("ctl3" , new Pattern()));
+        controllerRepository.save(new Controler("ctl4" , new Pattern()));
 
     }
 
@@ -55,7 +56,7 @@ public class ControlerTest {
 
         for (Controler controlers : controllerRepository.findAll()) {
             try {
-                qh_mocked.sendMessage(controlers.getFlagId(),controlers.getPattern() );
+                qh_mocked.sendMessage(controlers.getFlagId(),controlers.getPattern().getDescription() );
 
             } catch (Exception e) {
                 e.printStackTrace();
