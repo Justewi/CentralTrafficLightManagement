@@ -1,11 +1,14 @@
-package annuaire;
+package ctlms.queue_handling;
 
+import ctlms.Application;
+import ctlms.model.Pattern;
 import com.rabbitmq.client.*;
-import gestionpattern.Pattern;
+
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.json.JSONObject;
+import org.slf4j.LoggerFactory;
 
 /**
  * Classe d'abstraction faisant l'interface avec RabbitMQ
@@ -20,8 +23,11 @@ public class QueueHandler {
     private Channel channel;
 
     private static String DEFAULTFLAG = "ALL";
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(Application.class);
 
     public QueueHandler(String host) throws IOException {
+
+
         ConnectionFactory factory = new ConnectionFactory();
         factory.setHost(host);
 
@@ -62,7 +68,7 @@ public class QueueHandler {
     public void sendMessage(String flag, String message) throws Exception {
         //Envoie un message à un certain exchanger, avec un certain flag.
         this.channel.basicPublish(EXCHANGE_NAME, flag, null, message.getBytes("UTF-8"));
-        System.out.println(" [x] Sent '" + flag + "' : '" + message + "'");
+        log.info(" [x] Sent '" + flag + "' : '" + message + "'");
     }
 
     private static String getFlags(String[] strings) {

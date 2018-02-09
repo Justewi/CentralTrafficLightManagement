@@ -1,4 +1,4 @@
-package annuaire;
+package ctlms.queue_handling;
 
 public interface MessageListener {
 

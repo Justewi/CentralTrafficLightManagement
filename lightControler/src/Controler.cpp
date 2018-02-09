@@ -71,7 +71,11 @@ void Controler::handleMessage(std::string msg) {
         std::cout << "New pattern received." << std::endl;
         nextPattern.nsTime = std::chrono::seconds(j["NS"]);
         nextPattern.ewTime = std::chrono::seconds(j["EW"]);
-        nextPatternStart = std::chrono::system_clock::time_point(std::chrono::seconds(j["startTime"]));
+
+        // Gracefully handle weird commands
+        if (j.find("startTime") == j.end() || j["startTime"] == 0) {
+            nextPatternStart = std::chrono::system_clock::now();
+        } else nextPatternStart = std::chrono::system_clock::time_point(std::chrono::seconds(j["startTime"]));
         // TODO: Timestamp
     }
 }
