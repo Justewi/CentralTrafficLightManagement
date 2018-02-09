@@ -1,9 +1,8 @@
 package ctlms.model;
 
-import org.springframework.data.annotation.Id;
-
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.data.annotation.Id;
 
 public class City {
 
@@ -25,7 +24,7 @@ public class City {
         this.width = width;
         this.height = height;
         for(int i = 1; i <= width * height; i++){
-            controlerList.add(new Controler("ctl" + i , (i-1) % height, (i-1) / height));
+            controlerList.add(new Controler("ctrl" + i, (i - 1) % height, (i - 1) / height));
         }
     }
 
