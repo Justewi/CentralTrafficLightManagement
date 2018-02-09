@@ -2,23 +2,20 @@ package ctlms;
 
 import ctlms.model.City;
 import ctlms.model.Controler;
-import ctlms.model.Pattern;
 import ctlms.pattern_calculator.PatternCalculator;
 import ctlms.queue_handling.MessageListener;
 import ctlms.queue_handling.QueueHandler;
 import ctlms.repository.CityRepository;
 import ctlms.repository.ControllerRepository;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 
 @Transactional
 @SpringBootApplication
@@ -84,9 +81,9 @@ public class Application {
         City nyc = new City(10, 10, "NYC");
 
 
-        patternCalculator.manifestation(nyc, 4,4,50,30);
+//        patternCalculator.manifestation(nyc, 4,4,50,30);
 
-        //PatternCalculator.greenWaveXY(nyc, 9, 9, 0, 0, 70, 30);
+        PatternCalculator.greenWaveXY(nyc, 9, 9, 0, 0, 10, 20);
 
         cityRepository.save(nyc);
 

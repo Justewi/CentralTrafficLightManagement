@@ -18,10 +18,10 @@ void Controler::update() {
     mq.update();
     if (std::chrono::system_clock::now() >= nextPatternStart) {
         currentPattern = nextPattern;
-        cur = NS;
+        cur = nextPatternStartDirection;
         nextChange = nextPatternStart + currentPattern.nsTime;
         nextPatternStart = std::chrono::system_clock::time_point::max();
-        std::cout << "Starting new pattern." << std::endl;
+        std::cout << "Starting new pattern, green set to " << (cur == NS ? "North-South" : "Est-West") << std::endl;
     }
     if (std::chrono::system_clock::now() >= nextChange) {
         cur = cur == NS ? EW : NS;
@@ -72,10 +72,13 @@ void Controler::handleMessage(std::string msg) {
         nextPattern.nsTime = std::chrono::seconds(j["NS"]);
         nextPattern.ewTime = std::chrono::seconds(j["EW"]);
 
+        if (j.find("startDirection") != j.end())
+            nextPatternStartDirection = j["startDirection"] == "NS" ? NS : EW;
+        else nextPatternStartDirection = NS;
+
         // Gracefully handle weird commands
         if (j.find("startTime") == j.end() || j["startTime"] == 0) {
             nextPatternStart = std::chrono::system_clock::now();
-        } else nextPatternStart = std::chrono::system_clock::time_point(std::chrono::seconds(j["startTime"]));
-        // TODO: Timestamp
+        } else nextPatternStart = std::chrono::system_clock::time_point(std::chrono::milliseconds(j["startTime"]));
     }
 }

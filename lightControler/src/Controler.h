@@ -26,6 +26,7 @@ class Controler {
     struct Timers nextPattern;
     std::chrono::system_clock::time_point nextChange;
     std::chrono::system_clock::time_point nextPatternStart;
+    Direction nextPatternStartDirection;
 
 public:
 
