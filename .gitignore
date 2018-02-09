@@ -264,3 +264,6 @@ lightControler/lightCtrlR
 
 lightControler/AMQP-CPP
 lightControler/controler
+lightControler/bench/*.res
+lightControler/bench/*.log
+lightControler/bench.png
