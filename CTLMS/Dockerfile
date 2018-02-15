@@ -3,4 +3,4 @@ MAINTAINER gr7@AL
 
 COPY target/smartcity-ctlms.jar .
 
-CMD java -jar smartcity-ctlms.jar $RABBIT_HOST
+CMD java -jar -Dspring.profiles.active=docker smartcity-ctlms.jar $RABBIT_HOST

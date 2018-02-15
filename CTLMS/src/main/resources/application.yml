@@ -1,0 +1,2 @@
+spring.profiles: docker
+spring.data.mongodb.uri: mongodb://mymongo:27017/test
