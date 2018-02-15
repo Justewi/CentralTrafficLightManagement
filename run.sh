@@ -6,11 +6,13 @@ NC='\033[0m'
 docker network create street_network
 
 docker-compose up -d activemq
+docker-compose up -d mymongo
 
 echo -e "${ORANGE}\nWaiting for activeMQ to complete startup${NC}\n"
 sleep 5
 
-docker-compose up ctlms
+#docker-compose up ctlms
+java -jar CTLMS/target/smartcity-ctlms.jar
 
 #echo -e "${ORANGE}\nWaiting for CTLMS to complete startup${NC}\n"
 #sleep 5
