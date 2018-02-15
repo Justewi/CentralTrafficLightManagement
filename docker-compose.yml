@@ -1,15 +1,15 @@
 version: '3'
 
 services:
-  controller:
-    container_name: controller
-    image: gr2/controller
-    environment:
-      - ID=ctrl1
-      - CS=activemq
-      - CS_PORT=5672
-    depends_on:
-      - activemq
+  #controller:
+  #  container_name: controller
+  #  image: gr2/controller
+  #  environment:
+  #    - ID=ctrl1
+  #    - CS=activemq
+  #    - CS_PORT=5672
+  #  depends_on:
+  #    - activemq
 
   ctlms:
     container_name: ctlms

@@ -1,0 +1,6 @@
+Starting controlers script
+All controlers started.
+
+^CKilling all processes...
+kill: usage: kill [-s sigspec | -n signum | -sigspec] pid | jobspec ... or kill -l [sigspec]
+Done. Bye.

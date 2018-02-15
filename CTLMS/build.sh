@@ -10,7 +10,7 @@ docker-compose up -d mymongo
 sleep 3
 
 cd "$SCRIPT_PATH"
-mvn clean package
+mvn clean package -DskipTests=true
 docker build -t gr2/ctlms .
 cd ..
 

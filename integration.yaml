@@ -1,16 +1,16 @@
 version: "3"
 
 services:
-  activemq:
-    container_name: activemq
+  activemqStage:
+    container_name: activemqStage
     image: rabbitmq:3.6
     ports:
       - 15672:15672
       - 5672:5672
     network_mode: bridge
 
-  mongodb:
-    container_name: mongodb
+  mymongoStage:
+    container_name: mymongoStage
     image: mongo:latest
     ports:
       - 27017:27017
