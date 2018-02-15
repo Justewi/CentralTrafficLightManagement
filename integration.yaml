@@ -1,0 +1,15 @@
+version: "3"
+
+services:
+  activemq:
+    container_name: activemq
+    image: rabbitmq:3.6
+    ports:
+      - 15672:15672
+      - 5672:5672
+
+  mymongo:
+    container_name: mymongo
+    image: mongo:latest
+    ports:
+      - 27017:27017
