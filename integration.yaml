@@ -9,7 +9,7 @@ services:
       - 5672:5672
 
   mongodb:
-    container_name: mymongo
+    container_name: mongodb
     image: mongo:latest
     ports:
       - 27017:27017
