@@ -10,9 +10,11 @@ EXE_NAME=controler
 serverAddr=""
 serverPort=""
 
-[[ $# -eq 0 ]] && echo "Missing parameter, usage: $0 numberOfCtrl [serverAddr] [serverPort]" && exit 1;
-[[ $# -gt 1 ]] && serverAddr=$2
-[[ $# -gt 2 ]] && serverPort=$3
+[[ $# -lt 2 ]] && echo "Missing parameter, usage: $0 from to [serverAddr] [serverPort]" && exit 1;
+from=$1
+to=$2
+[[ $# -gt 2 ]] && serverAddr=$3
+[[ $# -gt 3 ]] && serverPort=$4
 
 declare -a processes
 kill_processes(){
@@ -26,7 +28,7 @@ handle_sigint(){
 }
 trap handle_sigint SIGINT
 
-for ((i = 1; i <= $1; i++)); do
+for ((i = $from; i <= $to; i++)); do
     ./${EXE_NAME} "ctrl$i" $serverAddr $serverPort &
     processes+=($!)
 done
